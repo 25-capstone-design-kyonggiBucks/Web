@@ -8,7 +8,7 @@ export default function Landing() {
         이 프로젝트는 사용자와 관리자를 구분하여 웹 애플리케이션을 제공합니다.
       </p>
       <Link href="/login">
-        <button className="mt-6 px-6 py-2 bg-main-color text-white rounded-lg hover:bg-blue-600">
+        <button className="mt-6 px-6 py-2 bg-main-color text-text-brown rounded-lg hover:bg-blue-600">
           시작하기
         </button>
       </Link>
