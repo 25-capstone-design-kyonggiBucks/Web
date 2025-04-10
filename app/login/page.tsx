@@ -2,15 +2,31 @@
 
 import Link from "next/link";
 import MainButton from "../../components/MainButton";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export default function LoginPage() {
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const router = useRouter();
 
   const handleLogin = () => {
+    if (!id || !password) {
+      setError("아이디와 비밀번호를 모두 입력해주세요.");
+      return;
+    }
+
+    const hasKorean = /[ㄱ-ㅎㅏ-ㅣ가-힣]/.test(id);
+    if (hasKorean) {
+      setError("아이디에는 한글을 포함할 수 없습니다.");
+      return;
+    }
+
+    setError("");
     console.log("아이디:", id);
     console.log("비밀번호:", password);
+    router.push("/home");
   };
 
   return (
@@ -23,7 +39,7 @@ export default function LoginPage() {
       </p>
 
       <form
-        className="flex flex-col items-center mb-[162px]"
+        className="flex flex-col items-center text-[20px]"
         onSubmit={(e) => {
           e.preventDefault();
           handleLogin();
@@ -34,7 +50,7 @@ export default function LoginPage() {
           placeholder="아이디"
           value={id}
           onChange={(e) => setId(e.target.value)}
-          className="w-[608px] h-[77px] pl-[34.3px] pt-[25.86px] pr-[473.7px] pb-[19.14px] bg-sub-color text-[20px] outline-none placeholder:text-text-brown placeholder:opacity-[0.45] rounded-tl-[30px] rounded-tr-[30px]"
+          className="w-[608px] h-[77px] pl-[34.3px] bg-sub-color outline-none placeholder:text-text-brown placeholder:opacity-[0.45] rounded-tl-[30px] rounded-tr-[30px]"
         />
         <div className="w-[608px] h-[1.5px] bg-[rgba(108,52,1,0.25)]" />
         <input
@@ -42,11 +58,13 @@ export default function LoginPage() {
           placeholder="비밀번호"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="w-[608px] h-[77px] pl-[34.3px] pt-[25.86px] pr-[473.7px] pb-[19.14px] bg-sub-color  text-[20px] outline-none placeholder:text-text-brown placeholder:opacity-[0.45] rounded-bl-[30px] rounded-br-[30px]"
+          className="w-[608px] h-[77px] pl-[34.3px] bg-sub-color outline-none placeholder:text-text-brown placeholder:opacity-[0.45] rounded-bl-[30px] rounded-br-[30px]"
         />
-        <div className="mt-[162px]">
-          <MainButton type="submit">로그인</MainButton>
-        </div>
+        {error && <p className="text-red-500 mt-4">{error}</p>}
+
+        <MainButton type="submit" className="mt-[162px]">
+          로그인
+        </MainButton>
       </form>
       <div className="flex mt-[36.37px] text-[32px] leading-normal tracking-[-0.96px] gap-[28px]">
         <p className="font-normal">회원이 아니신가요?</p>
