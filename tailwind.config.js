@@ -9,6 +9,7 @@ module.exports = {
       colors: {
         "main-color": "#FFBF01",
         "text-brown": "#6C3401",
+        "sub-color": "rgba(255,191,1,0.15)",
       },
     },
   },

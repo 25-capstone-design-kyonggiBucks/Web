@@ -1,37 +1,37 @@
+import Link from "next/link";
+import MainButton from "../../components/MainButton";
+
 export default function LoginPage() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-100">
-      <div className="w-full max-w-md bg-white p-6 rounded-lg shadow-md">
-        <h1 className="text-2xl font-bold text-center mb-4">프로젝트 제목</h1>
-        <p className="text-center text-gray-600 mb-6">
-          간단한 설명을 여기에 적어주세요.
-        </p>
+    <div className="font-nanum flex flex-col items-center justify-center min-h-screen w-full leading-normal text-text-brown">
+      <div className="bg-main-color text-[39.3px] font-extrabold px-[120px] py-[54px]">
+        프로젝트 제목
+      </div>
+      <p className="text-[26px] font-normal tracking-[-0.78px] pt-[26px] pb-[129px]">
+        동화 속 이야기의 주인공이 되어보세요!
+      </p>
 
-        <form className="space-y-4">
-          <input
-            type="text"
-            placeholder="아이디"
-            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-          <input
-            type="password"
-            placeholder="비밀번호"
-            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-          <button
-            type="submit"
-            className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition"
-          >
-            로그인
-          </button>
-        </form>
-
-        <p className="text-center text-sm text-gray-600 mt-4">
-          계정이 없으신가요?{" "}
-          <a href="/signup" className="text-blue-500 hover:underline">
-            회원가입하러 가기
-          </a>
-        </p>
+      <form className="flex flex-col items-center mb-[162px]">
+        <input
+          type="text"
+          placeholder="아이디"
+          className="w-[608px] h-[77px] pl-[34.3px] pt-[25.86px] pr-[473.7px] pb-[19.14px] bg-sub-color text-[20px] outline-none placeholder:text-text-brown placeholder:opacity-[0.45] rounded-tl-[30px] rounded-tr-[30px]"
+        />
+        <div className="w-[608px] h-[1.5px] bg-[rgba(108,52,1,0.25)]" />
+        <input
+          type="password"
+          placeholder="비밀번호"
+          className="w-[608px] h-[77px] pl-[34.3px] pt-[25.86px] pr-[473.7px] pb-[19.14px] bg-sub-color  text-[20px] outline-none placeholder:text-text-brown placeholder:opacity-[0.45] rounded-bl-[30px] rounded-br-[30px]"
+        />
+      </form>
+      <Link href="/login">
+        <MainButton type="submit">로그인</MainButton>
+      </Link>
+      <div className="flex mt-[36.37px] text-[32px] leading-normal tracking-[-0.96px] gap-[28px]">
+        <p className="font-normal">회원이 아니신가요?</p>
+        <Link href="/signup" className="font-bold">
+          회원가입 하러가기
+        </Link>
       </div>
     </div>
   );
