@@ -1,16 +1,17 @@
 import Link from "next/link";
+import MainButton from "../components/MainButton";
 
 export default function Landing() {
   return (
-    <div className="font-nanum flex flex-col items-center justify-center min-h-screen p-4 bg-gray-100">
-      <h1 className=" text-4xl font-bold">프로젝트 제목</h1>
-      <p className="mt-4 text-lg text-gray-600">
-        이 프로젝트는 사용자와 관리자를 구분하여 웹 애플리케이션을 제공합니다.
+    <div className="font-nanum flex flex-col items-center justify-center min-h-screen w-full leading-normal text-text-brown ">
+      <div className="bg-main-color text-[39.3px] font-extrabold px-[120px] py-[54px]">
+        프로젝트 제목
+      </div>
+      <p className="text-[26px] font-normal tracking-[-0.78px] pt-[26px] pb-[175px]">
+        동화 속 이야기의 주인공이 되어보세요!
       </p>
       <Link href="/login">
-        <button className="mt-6 px-6 py-2 bg-main-color text-text-brown rounded-lg hover:bg-blue-600">
-          시작하기
-        </button>
+        <MainButton type="button">시작하기</MainButton>
       </Link>
     </div>
   );
