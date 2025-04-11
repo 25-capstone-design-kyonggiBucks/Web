@@ -22,7 +22,7 @@ export default function Navbar() {
         onClick={() => router.push("/home")}
       >
         <Image
-          src={"/logo.svg"}
+          src={"/icons/navSearchIcon.svg"}
           alt="로고"
           width={64}
           height={64}
