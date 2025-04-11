@@ -1,0 +1,70 @@
+{
+  "success": true,
+  "status": "OK",
+  "message": null,
+  "data": [
+    {
+      "bookId": 1,
+      "title": "아기돼지 삼형제",
+      "bookType": "FOLKTALE",
+      "summary": "귀여운 아기 돼지 삼형제가 입김이 센 무서운 늑대를 피해 무사히 집을 지킬 수 있을까요?",
+      "imageURL": "/images/baby-pig.png"
+    },
+    {
+      "bookId": 2,
+      "title": "빨간모자와 늑대",
+      "bookType": "CLASSIC",
+      "summary": "빨간모자는 아픈 할머니를 위해 병문안을가던 와중 숲 속에서 늑대를 만나게 되는데...",
+      "imageURL": "/images/red-hat.png"
+    },
+    {
+      "bookId": 3,
+      "title": "빨간모자와 늑대",
+      "bookType": "CLASSIC",
+      "summary": "빨간모자는 아픈 할머니를 위해 병문안을가던 와중 숲 속에서 늑대를 만나게 되는데...",
+      "imageURL": "/images/red-hat.png"
+    },
+    {
+      "bookId": 4,
+      "title": "아기돼지 삼형제",
+      "bookType": "FOLKTALE",
+      "summary": "귀여운 아기 돼지 삼형제가 입김이 센 무서운 늑대를 피해 무사히 집을 지킬 수 있을까요?",
+      "imageURL": "/images/baby-pig.png"
+    },
+    {
+      "bookId": 5,
+      "title": "빨간모자와 늑대",
+      "bookType": "CLASSIC",
+      "summary": "빨간모자는 아픈 할머니를 위해 병문안을가던 와중 숲 속에서 늑대를 만나게 되는데...",
+      "imageURL": "/images/red-hat.png"
+    },
+    {
+      "bookId": 6,
+      "title": "빨간모자와 늑대",
+      "bookType": "CLASSIC",
+      "summary": "빨간모자는 아픈 할머니를 위해 병문안을가던 와중 숲 속에서 늑대를 만나게 되는데...",
+      "imageURL": "/images/red-hat.png"
+    },
+    {
+      "bookId": 7,
+      "title": "빨간모자와 늑대",
+      "bookType": "CLASSIC",
+      "summary": "빨간모자는 아픈 할머니를 위해 병문안을가던 와중 숲 속에서 늑대를 만나게 되는데...",
+      "imageURL": "/images/red-hat.png"
+    },
+    {
+      "bookId": 8,
+      "title": "빨간모자와 늑대",
+      "bookType": "CLASSIC",
+      "summary": "빨간모자는 아픈 할머니를 위해 병문안을가던 와중 숲 속에서 늑대를 만나게 되는데...",
+      "imageURL": "/images/red-hat.png"
+    },
+    {
+      "bookId": 9,
+      "title": "빨간모자와 늑대",
+      "bookType": "CLASSIC",
+      "summary": "빨간모자는 아픈 할머니를 위해 병문안을가던 와중 숲 속에서 늑대를 만나게 되는데...",
+      "imageURL": "/images/red-hat.png"
+    }
+  ]
+}
