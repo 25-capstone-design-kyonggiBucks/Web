@@ -60,7 +60,11 @@ export default function LoginPage() {
           onChange={(e) => setPassword(e.target.value)}
           className="w-[608px] h-[77px] pl-[34.3px] bg-sub-color outline-none placeholder:text-text-brown placeholder:opacity-[0.45] rounded-bl-[30px] rounded-br-[30px]"
         />
-        {error && <p className="text-red-500 mt-4">{error}</p>}
+        {error && (
+          <p className="text-red-500 mt-4 pl-[34.3px] flex w-full justify-start">
+            {error}
+          </p>
+        )}
 
         <MainButton type="submit" className="mt-[162px]">
           로그인

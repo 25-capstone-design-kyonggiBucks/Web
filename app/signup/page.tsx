@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import MainButton from "../../components/MainButton";
 import { useRouter } from "next/navigation";
@@ -9,7 +10,8 @@ export default function SignupPage() {
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [error, setError] = useState("");
   const router = useRouter();
 
@@ -46,7 +48,7 @@ export default function SignupPage() {
       </p>
 
       <form
-        className="flex flex-col items-center mb-[162px] text-[20px]"
+        className="flex flex-col items-center text-[20px]"
         onSubmit={(e) => {
           e.preventDefault();
           handleSingup();
@@ -60,23 +62,66 @@ export default function SignupPage() {
           className="w-[608px] h-[77px] pl-[34.3px] bg-sub-color outline-none placeholder:text-text-brown placeholder:opacity-[0.45] rounded-tl-[30px] rounded-tr-[30px]"
         />
         <div className="w-[608px] h-[1.5px] bg-[rgba(108,52,1,0.25)]" />
-        <input
-          type="password"
-          placeholder="비밀번호"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="w-[608px] h-[77px] pl-[34.3px] bg-sub-color outline-none placeholder:text-text-brown placeholder:opacity-[0.45]"
-        />
-        <div className="w-[608px] h-[1.5px] bg-[rgba(108,52,1,0.25)]" />
-        <input
-          type="password"
-          placeholder="비밀번호 확인"
-          value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
-          className="w-[608px] h-[77px] pl-[34.3px] bg-sub-color outline-none placeholder:text-text-brown placeholder:opacity-[0.45] rounded-bl-[30px] rounded-br-[30px]"
-        />
 
-        {error && <p className="text-red-500 mt-4">{error}</p>}
+        <div className="relative w-[608px]">
+          <input
+            type={showPassword ? "text" : "password"}
+            placeholder="비밀번호"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="w-[608px] h-[77px] pl-[34.3px] bg-sub-color outline-none placeholder:text-text-brown placeholder:opacity-[0.45]"
+          />
+          <button
+            type="button"
+            onClick={() => setShowPassword((prev) => !prev)}
+            className="absolute right-4 top-1/2 -translate-y-1/2 text-[24px] text-text-brown"
+          >
+            <Image
+              src={
+                showPassword ? "/icons/eye-close.svg" : "/icons/eye-open.svg"
+              }
+              alt="비밀번호 보기 토글"
+              width={24}
+              height={24}
+              className="w-[26px] h-[26px]"
+            />
+          </button>
+        </div>
+
+        <div className="w-[608px] h-[1.5px] bg-[rgba(108,52,1,0.25)]" />
+
+        <div className="relative w-[608px]">
+          <input
+            type={showConfirmPassword ? "text" : "password"}
+            placeholder="비밀번호 확인"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            className="w-[608px] h-[77px] pl-[34.3px] bg-sub-color outline-none placeholder:text-text-brown placeholder:opacity-[0.45] rounded-bl-[30px] rounded-br-[30px]"
+          />
+          <button
+            type="button"
+            onClick={() => setShowConfirmPassword((prev) => !prev)}
+            className="absolute right-4 top-1/2 -translate-y-1/2 text-[24px] text-text-brown"
+          >
+            <Image
+              src={
+                showConfirmPassword
+                  ? "/icons/eye-close.svg"
+                  : "/icons/eye-open.svg"
+              }
+              alt="비밀번호 보기 토글"
+              width={24}
+              height={24}
+              className="w-[26px] h-[26px]"
+            />
+          </button>
+        </div>
+
+        {error && (
+          <p className="text-red-500 mt-4 pl-[34.3px] flex w-full justify-start">
+            {error}
+          </p>
+        )}
         <MainButton type="submit" className="mt-[162px]">
           회원가입
         </MainButton>
