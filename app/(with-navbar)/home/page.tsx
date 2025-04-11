@@ -1,7 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import booksData from "../mocks/bookList.json";
+import booksData from "../../../mocks/bookList.json";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 const MOCK_BOOKS = booksData.data;
 
@@ -21,6 +22,7 @@ export default function Home() {
     startIndex,
     startIndex + itemsPerPage
   );
+  const router = useRouter();
 
   const handleTabChange = (type: "FOLKTALE" | "CLASSIC") => {
     setCurrentType(type);
@@ -58,10 +60,11 @@ export default function Home() {
       </div>
 
       {/* 동화 카드 그리드 */}
-      <div className="grid grid-cols-3 gap-[61px] w-full ">
+      <div className="grid grid-cols-3 gap-[61px] w-full">
         {displayedBooks.map((book) => (
           <div
             key={book.bookId}
+            onClick={() => router.push(`/home/${book.bookId}`)}
             className="rounded-[30px] bg-[#FFFEF6] shadow-[0px_4px_4px_rgba(108,52,1,0.25),_inset_0px_4px_10px_rgba(108,52,1,0.15)] text-center flex flex-col"
           >
             <div className="relative w-full aspect-[526/256] mb-[21px]">
