@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 // src/app/guide/page.tsx
 export default function GuidePage() {
   return (
@@ -10,10 +12,12 @@ export default function GuidePage() {
 
         {/* 얼굴 촬영 가이드 이미지 */}
         <div className="flex justify-center mb-4">
-          <img
-            src="/guide-image.png"
+          <Image
+            src={"/icons/guide-loading.svg"}
             alt="얼굴 촬영 가이드"
-            className="w-48 h-48 object-cover rounded-lg shadow"
+            width={24}
+            height={24}
+            className="rounded-[12px]"
           />
         </div>
 
