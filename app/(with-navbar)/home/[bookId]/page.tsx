@@ -1,14 +1,15 @@
 "use client";
 
+import { useParams, useRouter } from "next/navigation";
+
 import Image from "next/image";
 import MainButton from "@/components/MainButton";
 import booksData from "../../../../mocks/bookList.json";
-import { useParams } from "next/navigation";
 
 export default function BookDetailPage() {
   const params = useParams();
   const bookId = Number(params.bookId);
-
+  const router = useRouter();
   const { data: BOOKS } = booksData;
 
   const book = BOOKS.find((b) => b.bookId === bookId);
@@ -47,7 +48,12 @@ export default function BookDetailPage() {
           <p className="text-[34.112px] font-normal">{book.summary}</p>
 
           <div className="flex flex-col gap-[30px] mt-[90px] items-center">
-            <MainButton type="button">동화 읽기</MainButton>
+            <MainButton
+              type="button"
+              onClick={() => router.push(`/home/${bookId}/read`)}
+            >
+              동화 읽기
+            </MainButton>
             <MainButton type="button">동화에 얼굴 넣기</MainButton>
           </div>
         </div>
