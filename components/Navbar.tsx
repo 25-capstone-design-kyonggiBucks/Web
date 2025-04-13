@@ -1,13 +1,31 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 export default function Navbar() {
   const router = useRouter();
   const [search, setSearch] = useState("");
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  const handleClickOutside = (event: MouseEvent) => {
+    if (
+      dropdownRef.current &&
+      !dropdownRef.current.contains(event.target as Node)
+    ) {
+      setIsDropdownOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -55,11 +73,11 @@ export default function Navbar() {
       </form>
 
       {/*오른쪽 */}
-      <div className="flex items-center gap-[40px]">
+      <div className="flex items-center gap-[40px]" ref={dropdownRef}>
         <button
           type="button"
           className="cursor-pointern"
-          onClick={() => router.push("/mypage")}
+          onClick={() => setIsDropdownOpen(!isDropdownOpen)}
         >
           <Image
             src={"/icons/navMypageIcon.svg"}
@@ -69,6 +87,22 @@ export default function Navbar() {
             className="w-[64px] h-[64px]"
           />
         </button>
+        {isDropdownOpen && (
+          <div className="absolute right-[120px] mt-[200px] w-[180px] bg-white border border-gray-200 rounded-lg shadow-lg z-50">
+            <Link
+              href="/mypage"
+              className="block px-4 py-3 text-text-brown hover:bg-yellow-100 font-semibold"
+            >
+              마이페이지
+            </Link>
+            <Link
+              href="/about"
+              className="block px-4 py-3 text-text-brown hover:bg-yellow-100 font-semibold"
+            >
+              소개페이지
+            </Link>
+          </div>
+        )}
         <button
           type="button"
           className="cursor-pointer"
