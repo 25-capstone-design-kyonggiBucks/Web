@@ -2,15 +2,18 @@
 
 import Image from "next/image";
 import booksData from "../../../../mocks/bookList.json";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 const MOCK_BOOKS = booksData.data;
 
 // 간단 드롭다운(또는 모달) 예시 컴포넌트
-function MoreOptions() {
+function MoreOptions({ onEdit }: { onEdit: () => void }) {
   // 수정/삭제/추가 버튼 클릭 시 로직 추가 가능
   return (
     <div className="gap-y-[30px] flex flex-col w-[180px] h-[288px] shrink-0 rounded-[30px] bg-[rgba(255,254,246,0.95)] shadow-[2px_7px_10px_3px_rgba(0,0,0,0.45),_0px_4px_10px_0px_rgba(108,52,1,0.15)_inset] text-text-brown font-nanum text-[40px] not-italic font-normal leading-[85%] tracking-[-1.2px]">
-      <button className="px-[54px] mt-[30px]">수정</button>
+      <button className="px-[54px] mt-[30px]" onClick={onEdit}>
+        수정
+      </button>
 
       <hr className="border-t-[2px] border-text-brown opacity-[0.45] w-full" />
       <button className="px-[54px] ">삭제</button>
@@ -22,6 +25,7 @@ function MoreOptions() {
 }
 
 export default function AdminHomePage() {
+  const router = useRouter();
   const [currentType, setCurrentType] = useState<"FOLKTALE" | "CLASSIC">(
     "FOLKTALE"
   );
@@ -45,8 +49,16 @@ export default function AdminHomePage() {
     setPage(1);
   };
 
-  const handleMoreClick = (bookId: number) => {
+  const handleMoreClick = (
+    bookId: number,
+    e: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    e.stopPropagation();
     setOpenId(openId === bookId ? null : bookId);
+  };
+
+  const handleEdit = (bookId: number) => {
+    router.push(`/admin/${bookId}`);
   };
 
   return (
@@ -110,7 +122,7 @@ export default function AdminHomePage() {
                   type="button"
                   onClick={(e) => {
                     e.stopPropagation();
-                    handleMoreClick(book.bookId);
+                    handleMoreClick(book.bookId, e);
                   }}
                 >
                   <Image
@@ -123,7 +135,7 @@ export default function AdminHomePage() {
                 {/* 드롭다운(또는 모달) */}
                 {openId === book.bookId && (
                   <div className="absolute mt-[150px] left-full -translate-y-1/2  z-10">
-                    <MoreOptions />
+                    <MoreOptions onEdit={() => handleEdit(book.bookId)} />
                   </div>
                 )}
               </div>
