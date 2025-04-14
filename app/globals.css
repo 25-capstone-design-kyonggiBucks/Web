@@ -27,6 +27,9 @@
     --foreground: #ededed;
   }
 }
+.some-class {
+  background-image: url("/images/bg.png"); /* public/images/bg.png */
+}
 
 body {
   background: var(--background);
