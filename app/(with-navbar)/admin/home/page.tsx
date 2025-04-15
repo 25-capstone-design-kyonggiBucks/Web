@@ -12,9 +12,11 @@ const MOCK_BOOKS = booksData.data;
 function MoreOptions({
   onEdit,
   onDeleteMode,
+  onAdd,
 }: {
   onEdit: () => void;
   onDeleteMode: () => void;
+  onAdd: () => void;
 }) {
   return (
     <div className="gap-y-[30px] flex flex-col w-[180px] h-[288px] shrink-0 rounded-[30px] bg-[rgba(255,254,246,0.95)] shadow-[2px_7px_10px_3px_rgba(0,0,0,0.45),_0px_4px_10px_0px_rgba(108,52,1,0.15)_inset] text-text-brown font-nanum text-[40px] not-italic font-normal leading-[85%] tracking-[-1.2px]">
@@ -28,7 +30,9 @@ function MoreOptions({
       </button>
 
       <hr className="border-t-[2px] border-text-brown opacity-[0.45] w-full" />
-      <button className="px-[54px] ">추가</button>
+      <button className="px-[54px]" onClick={onAdd}>
+        추가
+      </button>
     </div>
   );
 }
@@ -156,10 +160,7 @@ export default function AdminHomePage() {
   };
 
   return (
-    <div
-      className="flex flex-col min-h-screen items-center justify-start 
-                    text-text-brown font-nanum bg-sub-color tracking-[-0.071em] px-[110px]"
-    >
+    <div className="flex flex-col min-h-screen items-center justify-start text-text-brown font-nanum bg-sub-color tracking-[-0.071em] px-[110px]">
       <h1 className="text-[38px] font-extrabold mt-[87px] mb-[66px]">
         동화 관리하기
       </h1>
@@ -256,6 +257,10 @@ export default function AdminHomePage() {
                       onDeleteMode={() => {
                         handleDeleteMode();
                         setOpenId(null);
+                      }}
+                      onAdd={() => {
+                        setOpenId(null);
+                        router.push("/admin/add");
                       }}
                     />
                   </div>
