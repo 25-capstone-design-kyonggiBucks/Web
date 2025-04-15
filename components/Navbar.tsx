@@ -4,10 +4,12 @@ import React, { useEffect, useRef, useState } from "react";
 
 import Image from "next/image";
 import Link from "next/link";
+import { useAuth } from "@/contexts/AuthContext";
 import { useRouter } from "next/navigation";
 
 export default function Navbar() {
   const router = useRouter();
+  const { userRole } = useAuth();
   const [search, setSearch] = useState("");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
@@ -32,12 +34,20 @@ export default function Navbar() {
     console.log("검색어:", search);
   };
 
+  const handleLogoClick = () => {
+    if (userRole === "admin") {
+      router.push("/admin/home");
+    } else {
+      router.push("/home");
+    }
+  };
+
   return (
     <nav className="w-full h-[140px] px-[40px] flex items-center justify-between bg-[rgba(255,241,189,1)] font-nanum text-text-brown">
       {/*왼쪽 */}
       <div
         className="flex items-center gap-3 cursor-pointer"
-        onClick={() => router.push("/home")}
+        onClick={handleLogoClick}
       >
         <Image
           src={"/icons/navSearchIcon.svg"}
