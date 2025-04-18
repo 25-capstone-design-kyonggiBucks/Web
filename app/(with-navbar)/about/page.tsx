@@ -2,7 +2,7 @@ import Image from "next/image";
 
 export default function AboutPage() {
   return (
-    <div className="min-h-screen bg-sub-color font-nanum text-text-brown leading-normal px-[296px] ">
+    <div className="min-h-screen bg-sub-color font-nanum text-text-brown leading-normal px-[296px] pb-[131px]">
       <section className="pt-[125px] mb-[114px]">
         <h1 className="text-[38px] font-extrabold tracking-[-0.071em] mb-[7px]">
           서비스 소개
