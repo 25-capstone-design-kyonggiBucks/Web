@@ -45,7 +45,7 @@ export default function AboutPage() {
               github: " http://github.com/username",
             },
             {
-              name: "안준형",
+              name: "안현준",
               part: "BE",
               github: " http://github.com/username",
             },
