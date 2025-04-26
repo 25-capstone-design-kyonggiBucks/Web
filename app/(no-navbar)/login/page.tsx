@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import MainButton from "../../../components/MainButton";
+import { useAuth } from "@/contexts/AuthContext";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -10,6 +11,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const router = useRouter();
+  const { setUserRole } = useAuth();
 
   const handleLogin = () => {
     if (!id || !password) {
@@ -23,10 +25,16 @@ export default function LoginPage() {
       return;
     }
 
-    setError("");
-    console.log("아이디:", id);
-    console.log("비밀번호:", password);
-    router.push("/home");
+    if (id === "admin" && password === "1234") {
+      setUserRole("admin");
+      router.push("/admin/home");
+    } else if (id === "user" && password === "1234") {
+      setUserRole("user");
+      router.push("/home");
+    } else {
+      setError("아이디 또는 비밀번호가 올바르지 않습니다.");
+      return;
+    }
   };
 
   return (
