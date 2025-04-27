@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import MainButton from "../../../components/MainButton";
+import { loginUser } from "@/api/authService";
 import { useAuth } from "@/contexts/AuthContext";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -13,7 +14,9 @@ export default function LoginPage() {
   const router = useRouter();
   const { setUserRole } = useAuth();
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
+    setError("");
+
     if (!id || !password) {
       setError("아이디와 비밀번호를 모두 입력해주세요.");
       return;
@@ -25,15 +28,21 @@ export default function LoginPage() {
       return;
     }
 
-    if (id === "admin" && password === "1234") {
-      setUserRole("admin");
-      router.push("/admin/home");
-    } else if (id === "user" && password === "1234") {
-      setUserRole("user");
-      router.push("/home");
-    } else {
-      setError("아이디 또는 비밀번호가 올바르지 않습니다.");
-      return;
+    try {
+      const { loginId: returnedId, accessToken } = await loginUser(
+        id,
+        password
+      );
+      sessionStorage.setItem("accessToken", accessToken);
+      const role = returnedId === "admin" ? "admin" : "user";
+      setUserRole(role);
+      router.push(role === "admin" ? "/admin/home" : "/home");
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError("알 수 없는 오류");
+      }
     }
   };
 

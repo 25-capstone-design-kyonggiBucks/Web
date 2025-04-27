@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import MainButton from "../../../components/MainButton";
+import { signupUser } from "@/api/authService";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -15,7 +16,7 @@ export default function SignupPage() {
   const [error, setError] = useState("");
   const router = useRouter();
 
-  const handleSingup = () => {
+  const handleSingup = async () => {
     if (!id || !password) {
       setError("아이디와 비밀번호를 모두 입력해주세요.");
       return;
@@ -32,10 +33,16 @@ export default function SignupPage() {
       return;
     }
 
-    setError("");
-    console.log("아이디:", id);
-    console.log("비밀번호:", password);
-    router.push("/guide");
+    try {
+      await signupUser(id, password, confirmPassword);
+      router.push("/guide");
+    } catch (e: unknown) {
+      if (e instanceof Error) {
+        setError(e.message);
+      } else {
+        setError("회원가입 중 알 수 없는 오류가 발생했습니다.");
+      }
+    }
   };
 
   return (
