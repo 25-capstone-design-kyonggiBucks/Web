@@ -46,7 +46,7 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="font-nanum flex flex-col items-center justify-center min-h-screen w-full leading-normal text-text-brown">
+    <div className="font-nanum flex flex-col items-center justify-center min-h-screen w-full leading-normal text-text-brown bg-sub-color">
       <div className="bg-main-color text-[39.3px] font-extrabold px-[120px] py-[54px]">
         프로젝트 제목
       </div>
