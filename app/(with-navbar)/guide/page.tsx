@@ -1,13 +1,13 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import { updateImage, uploadImage } from "@/api/uploadImage";
 
-import { AxiosError } from "axios";
 import Image from "next/image";
 import MainButton from "@/components/MainButton";
 import dynamic from "next/dynamic";
+import { getUserImages } from "@/api/getUserImage";
 import guideLinePath from "/public/images/guide-line.svg";
-import { uploadImage } from "@/api/uploadImage";
 
 const Webcam = dynamic(() => import("react-webcam"), { ssr: false });
 
@@ -35,34 +35,56 @@ export default function GuidePage() {
   const [currentExpr, setCurrentExpr] = useState<Expression | null>(null);
 
   const webcamRef = useRef<WebcamHandle | null>(null);
+  const uploadedRef = useRef<Set<Expression>>(new Set());
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const imgs = await getUserImages();
+        const init: Record<Expression, string | null> = {
+          HAPPY: null,
+          SAD: null,
+          SURPRISED: null,
+          ANGRY: null,
+        };
+        imgs.forEach(({ expression, url }) => {
+          init[expression] = url;
+          uploadedRef.current.add(expression);
+        });
+        setPhotos(init);
+      } catch (e) {
+        console.error("초기 이미지 조회 실패", e);
+      }
+    })();
+  }, []);
 
   const startCapture = (expr: Expression) => {
     setCurrentExpr(expr);
   };
 
   const handleCapture = async () => {
-    if (webcamRef.current) {
-      const imageSrc = webcamRef.current.getScreenshot();
-      if (imageSrc && currentExpr) {
-        setPhotos((prev) => ({ ...prev, [currentExpr]: imageSrc }));
-        console.log("Captured", { expression: currentExpr, file: imageSrc });
+    if (!webcamRef.current || !currentExpr) return;
 
-        // ✅ 이미지 업로드 API 호출
-        try {
-          const res = await uploadImage(imageSrc, currentExpr);
-          console.log("업로드 성공:", res);
-        } catch (error) {
-          const err = error as AxiosError;
-          console.error(
-            "이미지 업로드 실패:",
-            err.response?.data || err.message
-          );
-          throw err;
-        }
+    const imageSrc = webcamRef.current.getScreenshot();
+    if (!imageSrc) return;
 
-        setCurrentExpr(null);
-      }
+    const isUpdate = uploadedRef.current.has(currentExpr);
+
+    setPhotos((prev) => ({ ...prev, [currentExpr]: imageSrc }));
+    console.log("Captured", { expression: currentExpr, file: imageSrc });
+
+    try {
+      const res = isUpdate
+        ? await updateImage(imageSrc, currentExpr)
+        : await uploadImage(imageSrc, currentExpr);
+      uploadedRef.current.add(currentExpr);
+      console.log(`${isUpdate ? "수정" : "업로드"} 성공:`, res);
+    } catch (err) {
+      console.error("이미지 업로드 실패:", err);
+      alert("이미지 업로드 중 오류가 발생했습니다. 콘솔을 확인하세요.");
     }
+
+    setCurrentExpr(null);
   };
 
   const cancelCapture = () => {
@@ -112,7 +134,7 @@ export default function GuidePage() {
       ) : (
         <div className="grid grid-cols-2 gap-[100px] flex w-auto h-auto">
           {expressions.map(({ type, label }) => (
-            <div key={type} className="flex flex-col items-center">
+            <div key={type} className="flex flex-col items-center ">
               <p className="mb-2 text-[32px] font-bold">{label}</p>
               {photos[type] ? (
                 <div className="relative w-[500px] h-[300px]">
@@ -132,7 +154,7 @@ export default function GuidePage() {
               )}
               <MainButton
                 onClick={() => startCapture(type)}
-                className="mt-4 text-[18px] w-[500px] h-[80px] rounded-xl"
+                className="mt-4 text-[18px] w-[495px] h-[80px] rounded-xl"
               >
                 {photos[type] ? "재촬영" : "촬영"}
               </MainButton>
