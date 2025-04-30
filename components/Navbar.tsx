@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 
 export default function Navbar() {
   const router = useRouter();
-  const { userRole } = useAuth();
+  const { userRole, setUserRole } = useAuth();
   const [search, setSearch] = useState("");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
@@ -40,6 +40,21 @@ export default function Navbar() {
     } else {
       router.push("/home");
     }
+  };
+
+  const handleLogout = () => {
+    // 1. 세션스토리지에서 토큰 삭제
+    sessionStorage.removeItem("accessToken");
+    // (필요하다면 리프레시 토큰도 삭제)
+    sessionStorage.removeItem("refreshToken");
+
+    // 2. AuthContext에도 사용자 정보 초기화
+    if (setUserRole) {
+      setUserRole(null);
+    }
+
+    // 3. 로그인 페이지로 이동
+    router.push("/login");
   };
 
   return (
@@ -113,11 +128,7 @@ export default function Navbar() {
             </Link>
           </div>
         )}
-        <button
-          type="button"
-          className="cursor-pointer"
-          onClick={() => console.log("로그아웃")}
-        >
+        <button type="button" className="cursor-pointer" onClick={handleLogout}>
           <Image
             src={"/icons/navLogoutIcon.svg"}
             alt="로그아웃"

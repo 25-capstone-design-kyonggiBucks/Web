@@ -8,6 +8,7 @@ import MainButton from "../../../components/MainButton";
 import { useRouter } from "next/navigation";
 
 const expressions: { label: string; value: ExpressionType }[] = [
+  { label: "기본 표정", value: "NEUTRAL" },
   { label: "웃는 표정", value: "HAPPY" },
   { label: "슬픈 표정", value: "SAD" },
   { label: "놀란 표정", value: "SURPRISED" },

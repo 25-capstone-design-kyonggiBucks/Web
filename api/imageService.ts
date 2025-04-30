@@ -1,7 +1,12 @@
 import api from "./axios";
 import axios from "axios";
 
-export type ExpressionType = "HAPPY" | "SAD" | "ANGRY" | "SURPRISED";
+export type ExpressionType =
+  | "NEUTRAL"
+  | "HAPPY"
+  | "SAD"
+  | "ANGRY"
+  | "SURPRISED";
 
 /**
  * 표정 이미지 업로드
