@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 
 export default function Navbar() {
   const router = useRouter();
-  const { userRole } = useAuth();
+  const { userRole, setUserRole } = useAuth();
   const [search, setSearch] = useState("");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
@@ -40,6 +40,16 @@ export default function Navbar() {
     } else {
       router.push("/home");
     }
+  };
+
+  const handleLogout = () => {
+    sessionStorage.removeItem("accessToken");
+    sessionStorage.removeItem("refreshToken");
+
+    if (setUserRole) {
+      setUserRole(null);
+    }
+    router.push("/login");
   };
 
   return (
@@ -100,7 +110,7 @@ export default function Navbar() {
         {isDropdownOpen && (
           <div className="absolute right-[120px] mt-[200px] w-[180px] bg-white border border-gray-200 rounded-lg shadow-lg z-50">
             <Link
-              href="/mypage"
+              href="/guide"
               className="block px-4 py-3 text-text-brown hover:bg-yellow-100 font-semibold"
             >
               마이페이지
@@ -113,11 +123,7 @@ export default function Navbar() {
             </Link>
           </div>
         )}
-        <button
-          type="button"
-          className="cursor-pointer"
-          onClick={() => console.log("로그아웃")}
-        >
+        <button type="button" className="cursor-pointer" onClick={handleLogout}>
           <Image
             src={"/icons/navLogoutIcon.svg"}
             alt="로그아웃"

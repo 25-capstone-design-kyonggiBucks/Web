@@ -35,7 +35,7 @@ export default function SignupPage() {
 
     try {
       await signupUser(id, password, confirmPassword);
-      router.push("/guide");
+      router.push("/home");
     } catch (e: unknown) {
       if (e instanceof Error) {
         setError(e.message);
