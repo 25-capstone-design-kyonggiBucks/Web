@@ -2,10 +2,12 @@
 
 import React, { useRef, useState } from "react";
 
+import { AxiosError } from "axios";
 import Image from "next/image";
 import MainButton from "@/components/MainButton";
 import dynamic from "next/dynamic";
 import guideLinePath from "/public/images/guide-line.svg";
+import { uploadImage } from "@/api/uploadImage";
 
 const Webcam = dynamic(() => import("react-webcam"), { ssr: false });
 
@@ -38,12 +40,26 @@ export default function GuidePage() {
     setCurrentExpr(expr);
   };
 
-  const handleCapture = () => {
+  const handleCapture = async () => {
     if (webcamRef.current) {
       const imageSrc = webcamRef.current.getScreenshot();
       if (imageSrc && currentExpr) {
         setPhotos((prev) => ({ ...prev, [currentExpr]: imageSrc }));
         console.log("Captured", { expression: currentExpr, file: imageSrc });
+
+        // ✅ 이미지 업로드 API 호출
+        try {
+          const res = await uploadImage(imageSrc, currentExpr);
+          console.log("업로드 성공:", res);
+        } catch (error) {
+          const err = error as AxiosError;
+          console.error(
+            "이미지 업로드 실패:",
+            err.response?.data || err.message
+          );
+          throw err;
+        }
+
         setCurrentExpr(null);
       }
     }
