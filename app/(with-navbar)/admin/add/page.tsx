@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 
 import Image from "next/image";
 import MainButton from "@/components/MainButton";
+import { addBook } from "@/api/bookApi";
 import { useRouter } from "next/navigation";
 
 export default function AddFairyTalePage() {
@@ -43,7 +44,7 @@ export default function AddFairyTalePage() {
   };
 
   //
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (!bookType) {
@@ -58,17 +59,32 @@ export default function AddFairyTalePage() {
       alert("내용을 입력하세요.");
       return;
     }
+    if (!uploadFile) {
+      alert("이미지를 업로드해주세요.");
+      return;
+    }
 
-    const newBook = {
-      bookId: Date.now(),
+    const book = {
       title,
-      summary,
-      file: uploadFile, // 실제 업로드 시 서버 API 필요
       bookType,
+      summary,
     };
-    console.log("새 동화 등록:", newBook);
 
-    router.push("/admin/home");
+    const formData = new FormData();
+    formData.append("book", JSON.stringify(book));
+    formData.append("file", uploadFile);
+
+    try {
+      await addBook(formData);
+      alert("도서가 성공적으로 추가되었습니다.");
+      router.push("/admin/home");
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        alert(`추가 실패: ${error.message}`);
+      } else {
+        alert("추가 실패: 알 수 없는 오류가 발생했습니다.");
+      }
+    }
   };
 
   const toggleDropdown = () => setIsDropdownOpen((prev) => !prev);
