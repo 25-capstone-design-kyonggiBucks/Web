@@ -36,6 +36,11 @@ export const getBooksByType = async (bookType: "FOLKTALE" | "CLASSIC") => {
   return response.data.data;
 };
 
+export const getBookById = async (bookId: number) => {
+  const res = await api.get(`/api/books/${bookId}`);
+  return res.data.data;
+};
+
 export const deleteBook = async (bookId: number) => {
   try {
     const response = await api.delete(`/api/admin/books`, {

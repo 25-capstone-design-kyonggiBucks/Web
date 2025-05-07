@@ -1,25 +1,43 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 
 import Image from "next/image";
 import MainButton from "@/components/MainButton";
-import booksData from "../../../../mocks/bookList.json";
+import { getBookById } from "@/api/bookApi";
+
+interface Book {
+  bookId: number;
+  title: string;
+  summary: string;
+  imageURL: string;
+  bookType: "FOLKTALE" | "CLASSIC";
+}
 
 export default function BookDetailPage() {
   const params = useParams();
   const bookId = Number(params.bookId);
   const router = useRouter();
-  const { data: BOOKS } = booksData;
 
-  const book = BOOKS.find((b) => b.bookId === bookId);
+  const [book, setBook] = useState<Book | null>(null);
+
+  useEffect(() => {
+    const fetchBook = async () => {
+      try {
+        const data = await getBookById(bookId);
+        setBook(data);
+      } catch (error) {
+        console.error("도서 조회 실패:", error);
+      }
+    };
+    fetchBook();
+  }, [bookId]);
 
   if (!book) {
     return <div className="p-8">존재하지 않는 동화입니다.</div>;
   }
-
   const typeLabel = book.bookType === "FOLKTALE" ? "전래동화" : "세계명작";
-
   return (
     <div className="flex flex-col px-[158px] py-[44px] bg-sub-color min-h-screen font-nanum text-text-brown">
       <p className="font-extrabold leading-normal">
@@ -33,7 +51,7 @@ export default function BookDetailPage() {
         {/* 왼쪽: 썸네일 이미지 */}
         <div className="relative w-[915px] h-[610px]  rounded-[20px] overflow-hidden">
           <Image
-            src={book.imageURL}
+            src={`${process.env.NEXT_PUBLIC_API_BASE_URL}${book.imageURL}`}
             alt={book.title}
             fill
             className="object-cover"

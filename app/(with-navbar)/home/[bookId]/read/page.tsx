@@ -1,14 +1,38 @@
 "use client";
 
+import { useEffect, useState } from "react";
+
 import Image from "next/image";
-import booksData from "../../../../../mocks/bookList.json";
+import { getBookById } from "@/api/bookApi";
 import { useParams } from "next/navigation";
+
+interface Book {
+  bookId: number;
+  title: string;
+  summary: string;
+  imageURL: string;
+  bookType: "FOLKTALE" | "CLASSIC";
+}
 
 export default function BookReadPage() {
   const params = useParams();
   const bookId = Number(params.bookId);
-  const { data: BOOKS } = booksData;
-  const book = BOOKS.find((b) => b.bookId === bookId);
+  const [book, setBook] = useState<Book | null>(null);
+
+  useEffect(() => {
+    const fetchBook = async () => {
+      try {
+        const data = await getBookById(bookId);
+        setBook(data);
+      } catch (error) {
+        console.error("도서 조회 실패:", error);
+      }
+    };
+
+    if (!isNaN(bookId)) {
+      fetchBook();
+    }
+  }, [bookId]);
 
   if (!book) {
     return <div className="p-8">존재하지 않는 동화입니다.</div>;
@@ -21,7 +45,7 @@ export default function BookReadPage() {
       </h1>
       <div className="relative w-[1500px] h-[735px] rounded-[30px] overflow-hidden">
         <Image
-          src={book.imageURL}
+          src={`${process.env.NEXT_PUBLIC_API_BASE_URL}${book.imageURL}`}
           alt="동화 이미지"
           fill
           className="object-cover"
