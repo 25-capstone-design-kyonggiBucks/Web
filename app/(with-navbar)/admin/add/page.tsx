@@ -71,8 +71,11 @@ export default function AddFairyTalePage() {
     };
 
     const formData = new FormData();
-    formData.append("book", JSON.stringify(book));
-    formData.append("file", uploadFile);
+    formData.append(
+      "book",
+      new Blob([JSON.stringify(book)], { type: "application/json" })
+    );
+    formData.append("image", uploadFile);
 
     try {
       await addBook(formData);
