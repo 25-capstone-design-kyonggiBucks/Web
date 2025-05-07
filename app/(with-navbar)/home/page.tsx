@@ -1,21 +1,29 @@
 "use client";
 
+import { useEffect, useState } from "react";
+
 import Image from "next/image";
-import booksData from "../../../mocks/bookList.json";
+import { getBooksByType } from "@/api/bookApi";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
-const MOCK_BOOKS = booksData.data;
+
+interface Book {
+  bookId: number;
+  title: string;
+  summary: string;
+  imageURL: string;
+  bookType: "FOLKTALE" | "CLASSIC";
+}
 
 export default function Home() {
+  const [books, setBooks] = useState<Book[]>([]);
+
   const [currentType, setCurrentType] = useState<"FOLKTALE" | "CLASSIC">(
     "FOLKTALE"
   );
   const [page, setPage] = useState(1);
   const itemsPerPage = 6;
 
-  const filteredBooks = MOCK_BOOKS.filter(
-    (book) => book.bookType === currentType
-  );
+  const filteredBooks = books;
   const totalPages = Math.ceil(filteredBooks.length / itemsPerPage);
   const startIndex = (page - 1) * itemsPerPage;
   const displayedBooks = filteredBooks.slice(
@@ -28,6 +36,17 @@ export default function Home() {
     setCurrentType(type);
     setPage(1);
   };
+  useEffect(() => {
+    const fetchBooks = async () => {
+      try {
+        const res = await getBooksByType(currentType);
+        setBooks(res);
+      } catch (error) {
+        console.error("도서 조회 실패:", error);
+      }
+    };
+    fetchBooks();
+  }, [currentType]);
 
   return (
     <div className="flex flex-col min-h-screen items-center justify-start text-text-brown font-nanum bg-sub-color tracking-[-0.071em] px-[110px]">
@@ -68,7 +87,11 @@ export default function Home() {
             className="rounded-[30px] bg-[#FFFEF6] shadow-[0px_4px_4px_rgba(108,52,1,0.25),_inset_0px_4px_10px_rgba(108,52,1,0.15)] text-center flex flex-col"
           >
             <div className="relative w-full aspect-[526/256] mb-[21px]">
-              <Image src={book.imageURL} alt={book.title} fill />
+              <Image
+                src={`${process.env.NEXT_PUBLIC_API_BASE_URL}${book.imageURL}`}
+                alt={book.title}
+                fill
+              />
             </div>
             <div className="flex flex-col px-[32px] pb-[33px] text-start">
               <h3 className="text-[38px] font-extrabold leading-normal tracking-[-0.071em]">
