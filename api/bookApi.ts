@@ -35,3 +35,20 @@ export const getBooksByType = async (bookType: "FOLKTALE" | "CLASSIC") => {
   });
   return response.data.data;
 };
+
+export const deleteBook = async (bookId: number) => {
+  try {
+    const response = await api.delete(`/api/admin/books`, {
+      params: { bookId },
+    });
+    return response.data;
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error("도서 삭제 실패:", error.message);
+      throw new Error(error.message);
+    } else {
+      console.error("도서 삭제 실패: 알 수 없는 에러", error);
+      throw new Error("알 수 없는 오류가 발생했습니다.");
+    }
+  }
+};

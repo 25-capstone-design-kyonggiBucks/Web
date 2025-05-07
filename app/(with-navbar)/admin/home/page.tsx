@@ -1,10 +1,10 @@
 "use client";
 
+import { deleteBook, getBooksByType } from "@/api/bookApi";
 import { useEffect, useRef, useState } from "react";
 
 import Image from "next/image";
 import MainButton from "@/components/MainButton";
-import { getBooksByType } from "@/api/bookApi";
 import { useRouter } from "next/navigation";
 
 interface Book {
@@ -63,7 +63,7 @@ function DeleteModal({
         </h2>
         <div className="relative w-full h-[262px]">
           <Image
-            src={bookImage}
+            src={`${process.env.NEXT_PUBLIC_API_BASE_URL}${bookImage}`}
             alt={bookTitle}
             fill
             className="object-contain"
@@ -163,11 +163,17 @@ export default function AdminHomePage() {
     setIsDeleteModalOpen(true);
   };
 
-  const handleConfirmDelete = () => {
+  const handleConfirmDelete = async () => {
     if (deleteId == null) return;
-    setBooks((prev) => prev.filter((b) => b.bookId !== deleteId));
-    setDeleteId(null);
-    setIsDeleteModalOpen(false);
+    try {
+      await deleteBook(deleteId);
+      setBooks((prev) => prev.filter((b) => b.bookId !== deleteId));
+      setDeleteId(null);
+      setIsDeleteModalOpen(false);
+    } catch (error) {
+      alert("도서 삭제에 실패했습니다.");
+      console.error("삭제 실패:", error);
+    }
   };
 
   return (
