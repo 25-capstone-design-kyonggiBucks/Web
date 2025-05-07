@@ -4,10 +4,16 @@ import { useEffect, useRef, useState } from "react";
 
 import Image from "next/image";
 import MainButton from "@/components/MainButton";
-import booksData from "../../../../mocks/bookList.json";
+import { getBooksByType } from "@/api/bookApi";
 import { useRouter } from "next/navigation";
 
-const MOCK_BOOKS = booksData.data;
+interface Book {
+  bookId: number;
+  title: string;
+  summary: string;
+  imageURL: string;
+  bookType: "FOLKTALE" | "CLASSIC";
+}
 
 function MoreOptions({
   onEdit,
@@ -87,10 +93,10 @@ export default function AdminHomePage() {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [deleteId, setDeleteId] = useState<number | null>(null);
 
-  const [books, setBooks] = useState(MOCK_BOOKS);
+  const [books, setBooks] = useState<Book[]>([]);
 
   const itemsPerPage = 6;
-  const filteredBooks = books.filter((book) => book.bookType === currentType);
+  const filteredBooks = books;
   const totalPages = Math.ceil(filteredBooks.length / itemsPerPage);
   const startIndex = (page - 1) * itemsPerPage;
   const displayedBooks = filteredBooks.slice(
@@ -114,6 +120,18 @@ export default function AdminHomePage() {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
+  useEffect(() => {
+    const fetchBooks = async () => {
+      try {
+        const res = await getBooksByType(currentType);
+        setBooks(res);
+      } catch (error) {
+        console.error("도서 불러오기 실패:", error);
+      }
+    };
+    fetchBooks();
+  }, [currentType]);
 
   const handleTabChange = (type: "FOLKTALE" | "CLASSIC") => {
     setCurrentType(type);
@@ -207,7 +225,11 @@ export default function AdminHomePage() {
             )}
 
             <div className="relative w-full aspect-[526/256] mb-[21px] cursor-pointer">
-              <Image src={book.imageURL} alt={book.title} fill />
+              <Image
+                src={`${process.env.NEXT_PUBLIC_API_BASE_URL}${book.imageURL}`}
+                alt={book.title}
+                fill
+              />
             </div>
             {/* 도서 정보 + 더보기 아이콘 */}
             <div className="flex flex-row justify-between px-[32px] pb-[33px]">

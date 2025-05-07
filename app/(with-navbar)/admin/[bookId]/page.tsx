@@ -1,21 +1,49 @@
 "use client";
 
+import { getBooksByType, updateBook } from "@/api/bookApi";
+import { useEffect, useState } from "react";
+import { useParams, useRouter } from "next/navigation";
+
 import Image from "next/image";
 import MainButton from "@/components/MainButton";
-import booksData from "../../../../mocks/bookList.json";
-import { useParams } from "next/navigation";
-import { useState } from "react";
+
+interface Book {
+  bookId: number;
+  title: string;
+  summary: string;
+  imageURL: string;
+  bookType: "FOLKTALE" | "CLASSIC";
+}
 
 export default function AdminBookDetailPage() {
   const params = useParams();
   const bookId = Number(params.bookId);
-  const { data: BOOKS } = booksData;
+  const router = useRouter();
+
+  const [book, setBook] = useState<Book | null>(null);
   const [isEditing, setIsEditing] = useState(false);
 
-  const book = BOOKS.find((b) => b.bookId === bookId);
   const [title, setTitle] = useState(book?.title || "");
   const [summary, setSummary] = useState(book?.summary || "");
   const [imageURL, setImageURL] = useState(book?.imageURL || "");
+
+  useEffect(() => {
+    const fetchBook = async () => {
+      try {
+        const books = await getBooksByType("FOLKTALE");
+        const found = books.find((b: Book) => b.bookId === bookId);
+        if (found) {
+          setBook(found);
+          setTitle(found.title);
+          setSummary(found.summary);
+          setImageURL(found.imageURL);
+        }
+      } catch (error) {
+        console.error("도서 조회 실패:", error);
+      }
+    };
+    fetchBook();
+  }, [bookId]);
 
   if (!book) {
     return <div className="p-8">존재하지 않는 동화입니다.</div>;
@@ -27,18 +55,20 @@ export default function AdminBookDetailPage() {
     setIsEditing(true);
   };
 
-  const handleSaveChanges = () => {
-    // 나중에 API 연동 시 이곳에서 PUT/PATCH 호출하여 수정
-    // 지금은 mock데이터이므로 state만 업데이트
-    // 실제로는 context or global state를 업데이트하거나, 서버에 반영 필요
-
-    // 예시로 console에 출력
-    console.log("수정된 내용:", {
-      title,
-      summary,
-      imageURL,
-    });
-    setIsEditing(false);
+  const handleSaveChanges = async () => {
+    try {
+      await updateBook({
+        bookId,
+        title,
+        summary,
+      });
+      alert("도서가 성공적으로 수정되었습니다.");
+      setIsEditing(false);
+      router.push("/admin/home");
+    } catch (error) {
+      alert("수정에 실패했습니다.");
+      console.error("수정 오류:", error);
+    }
   };
 
   return (
@@ -55,10 +85,15 @@ export default function AdminBookDetailPage() {
         <div className="relative w-[915px] h-[610px] rounded-[20px] overflow-hidden">
           {isEditing ? (
             // 미리보기: 수정 중에는 imageURL 필드가 바뀔 수 있음
-            <Image src={imageURL} alt={title} fill className="object-cover" />
+            <Image
+              src={`${process.env.NEXT_PUBLIC_API_BASE_URL}${book.imageURL}`}
+              alt={title}
+              fill
+              className="object-cover"
+            />
           ) : (
             <Image
-              src={book.imageURL}
+              src={`${process.env.NEXT_PUBLIC_API_BASE_URL}${book.imageURL}`}
               alt={book.title}
               fill
               className="object-cover"

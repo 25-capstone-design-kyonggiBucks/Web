@@ -14,3 +14,24 @@ export const addBook = async (formData: FormData) => {
     }
   }
 };
+
+export const updateBook = async (book: {
+  bookId: number;
+  title: string;
+  summary: string;
+}) => {
+  try {
+    const response = await api.put("/api/admin/books", book);
+    return response.data;
+  } catch (error) {
+    console.error("도서 수정 실패:", error);
+    throw error;
+  }
+};
+
+export const getBooksByType = async (bookType: "FOLKTALE" | "CLASSIC") => {
+  const response = await api.get("/api/books", {
+    params: { type: bookType },
+  });
+  return response.data.data;
+};
