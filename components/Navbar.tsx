@@ -67,7 +67,7 @@ export default function Navbar() {
           className="w-[64px] h-[64px]"
         />
         <span className="text-[40px] font-extrabold leading-normal tracking-[-0.075em]">
-          LOGO
+          나나랜드
         </span>
       </div>
 
