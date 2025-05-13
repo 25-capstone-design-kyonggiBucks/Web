@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import {
+  getUserImages,
   updateImage,
   updateImageToPython,
   uploadImage,
@@ -11,7 +12,6 @@ import {
 import Image from "next/image";
 import MainButton from "@/components/MainButton";
 import dynamic from "next/dynamic";
-import { getUserImages } from "@/api/getUserImage";
 import guideLinePath from "/public/images/guide-line.svg";
 
 const Webcam = dynamic(() => import("react-webcam"), { ssr: false });
