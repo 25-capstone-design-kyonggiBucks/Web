@@ -1,7 +1,12 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import { updateImage, uploadImage } from "@/api/uploadImage";
+import {
+  updateImage,
+  updateImageToPython,
+  uploadImage,
+  uploadImageToPython,
+} from "@/api/uploadImage";
 
 import Image from "next/image";
 import MainButton from "@/components/MainButton";
@@ -74,11 +79,16 @@ export default function GuidePage() {
     console.log("Captured", { expression: currentExpr, file: imageSrc });
 
     try {
-      const res = isUpdate
-        ? await updateImage(imageSrc, currentExpr)
-        : await uploadImage(imageSrc, currentExpr);
+      if (isUpdate) {
+        const res1 = await updateImage(imageSrc, currentExpr);
+        const res2 = await updateImageToPython(imageSrc, currentExpr);
+        console.log("수정 완료", res1, res2);
+      } else {
+        const res1 = await uploadImage(imageSrc, currentExpr);
+        const res2 = await uploadImageToPython(imageSrc, currentExpr);
+        console.log("업로드 완료", res1, res2);
+      }
       uploadedRef.current.add(currentExpr);
-      console.log(`${isUpdate ? "수정" : "업로드"} 성공:`, res);
     } catch (err) {
       console.error("이미지 업로드 실패:", err);
       alert("이미지 업로드 중 오류가 발생했습니다. 콘솔을 확인하세요.");

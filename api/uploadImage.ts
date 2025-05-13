@@ -55,3 +55,26 @@ export async function updateImage(
     throw error;
   }
 }
+
+//크롭 이미지 api
+export async function uploadImageToPython(
+  imageDataUrl: string,
+  expression: Expression
+) {
+  const formData = await createImageFile(imageDataUrl, expression);
+  const response = await api.post("/api/v2/user/images", formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
+  return response.data;
+}
+
+export async function updateImageToPython(
+  imageDataUrl: string,
+  expression: Expression
+) {
+  const formData = await createImageFile(imageDataUrl, expression);
+  const response = await api.put("/api/v2/user/images", formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
+  return response.data;
+}
