@@ -59,16 +59,7 @@ export default function Navbar() {
         className="flex items-center gap-3 cursor-pointer"
         onClick={handleLogoClick}
       >
-        <Image
-          src={"/icons/navSearchIcon.svg"}
-          alt="로고"
-          width={64}
-          height={64}
-          className="w-[64px] h-[64px]"
-        />
-        <span className="text-[40px] font-extrabold leading-normal tracking-[-0.075em]">
-          나나랜드
-        </span>
+        <Image src="/images/logo.png" alt="close" width={201} height={74} />
       </div>
 
       {/* 검색바 */}

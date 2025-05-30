@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-import Image from "next/image";
+import { getBasicVedio } from "@/api/video";
 import { getBookById } from "@/api/bookApi";
 import { useParams } from "next/navigation";
 
@@ -18,14 +18,18 @@ export default function BookReadPage() {
   const params = useParams();
   const bookId = Number(params.bookId);
   const [book, setBook] = useState<Book | null>(null);
+  const [videoUrl, setVideoUrl] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchBook = async () => {
       try {
         const data = await getBookById(bookId);
         setBook(data);
+
+        const videoData = await getBasicVedio(bookId);
+        setVideoUrl(videoData);
       } catch (error) {
-        console.error("도서 조회 실패:", error);
+        console.error(error);
       }
     };
 
@@ -44,13 +48,18 @@ export default function BookReadPage() {
         {book.title}
       </h1>
       <div className="relative w-[1500px] h-[735px] rounded-[30px] overflow-hidden">
-        <Image
-          src={`${process.env.NEXT_PUBLIC_API_BASE_URL}${book.imageURL}`}
-          alt="동화 이미지"
-          fill
-          className="object-cover"
-        />
-        <div className="absolute inset-0 bg-black bg-opacity-30 flex justify-center items-center">
+        {videoUrl ? (
+          <video
+            src={videoUrl}
+            controls
+            className="w-full h-full object-cover"
+          />
+        ) : (
+          <div className="w-full h-full flex justify-center items-center text-white">
+            영상을 불러오는 중...
+          </div>
+        )}
+        {/* <div className="absolute inset-0 bg-black bg-opacity-30 flex justify-center items-center">
           <button>
             <Image
               src="/icons/book-read-playIcon.svg"
@@ -59,7 +68,7 @@ export default function BookReadPage() {
               height={143}
             />
           </button>
-        </div>
+        </div> */}
       </div>
     </div>
   );

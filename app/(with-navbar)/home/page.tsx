@@ -86,11 +86,12 @@ export default function Home() {
             onClick={() => router.push(`/home/${book.bookId}`)}
             className="rounded-[30px] bg-[#FFFEF6] shadow-[0px_4px_4px_rgba(108,52,1,0.25),_inset_0px_4px_10px_rgba(108,52,1,0.15)] text-center flex flex-col"
           >
-            <div className="relative w-full aspect-[526/256] mb-[21px]">
+            <div className="relative w-full aspect-[526/256] rounded-t-[30px] mb-[21px]">
               <Image
                 src={`${process.env.NEXT_PUBLIC_API_BASE_URL}${book.imageURL}`}
                 alt={book.title}
                 fill
+                className="rounded-t-[30px]"
               />
             </div>
             <div className="flex flex-col px-[32px] pb-[33px] text-start">

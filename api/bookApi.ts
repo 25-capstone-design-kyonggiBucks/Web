@@ -37,8 +37,12 @@ export const getBooksByType = async (bookType: "FOLKTALE" | "CLASSIC") => {
 };
 
 export const getBookById = async (bookId: number) => {
-  const res = await api.get(`/api/books/${bookId}`);
-  return res.data.data;
+  try {
+    const res = await api.get(`/api/books/${bookId}`);
+    return res.data.data;
+  } catch (error) {
+    console.error("도서 조회 실패:", error);
+  }
 };
 
 export const deleteBook = async (bookId: number) => {

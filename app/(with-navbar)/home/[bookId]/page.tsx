@@ -49,12 +49,11 @@ export default function BookDetailPage() {
       <hr className="border-t-[3px] border-text-brown opacity-[0.45] w-full mb-[44px]" />
       <div className="flex flex-row gap-[81px]">
         {/* 왼쪽: 썸네일 이미지 */}
-        <div className="relative w-[915px] h-[610px]  rounded-[20px] overflow-hidden">
+        <div className="relative w-[915px] h-[610px]  rounded-[30px] overflow-hidden">
           <Image
             src={`${process.env.NEXT_PUBLIC_API_BASE_URL}${book.imageURL}`}
             alt={book.title}
             fill
-            className="object-cover"
           />
         </div>
 
