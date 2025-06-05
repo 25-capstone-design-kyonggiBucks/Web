@@ -1,8 +1,10 @@
 "use client";
 
+import { getCustomVedio, postCustomVedio } from "@/api/video";
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 
+import CreateLoading from "app/(with-navbar)/createLoading/page";
 import Image from "next/image";
 import MainButton from "@/components/MainButton";
 import { getBookById } from "@/api/bookApi";
@@ -21,6 +23,40 @@ export default function BookDetailPage() {
   const router = useRouter();
 
   const [book, setBook] = useState<Book | null>(null);
+  const [isCreating, setIsCreating] = useState(false);
+
+  const handleCustomVideo = async () => {
+    try {
+      setIsCreating(true);
+      await postCustomVedio(bookId);
+
+      // 영상 생성 완료될 때까지 폴링 또는 일정 시간 대기 후 시도
+      let retryCount = 0;
+      let videoUrl = null;
+
+      while (retryCount < 10) {
+        try {
+          videoUrl = await getCustomVedio(bookId);
+          if (videoUrl) break; // 영상 생성 완료됨
+        } catch {
+          // 영상이 아직 준비되지 않았을 경우
+          await new Promise((res) => setTimeout(res, 2000)); // 2초 대기
+          retryCount++;
+        }
+      }
+
+      if (videoUrl) {
+        router.push(`/home/${bookId}/read`);
+      } else {
+        alert("영상 생성에 실패했습니다. 다시 시도해주세요.");
+        setIsCreating(false);
+      }
+    } catch (e: unknown) {
+      console.error(e);
+      alert("영상 생성 중 오류가 발생했습니다.");
+      setIsCreating(false);
+    }
+  };
 
   useEffect(() => {
     const fetchBook = async () => {
@@ -38,8 +74,10 @@ export default function BookDetailPage() {
     return <div className="p-8">존재하지 않는 동화입니다.</div>;
   }
   const typeLabel = book.bookType === "FOLKTALE" ? "전래동화" : "세계명작";
+
   return (
     <div className="flex flex-col px-[158px] py-[44px] bg-sub-color min-h-screen font-nanum text-text-brown">
+      {isCreating && <CreateLoading />}
       <p className="font-extrabold leading-normal">
         <span className="text-[48px] tracking-[-0.09em]"> {typeLabel} </span>
         <span className="text-[38px] tracking-[-0.071em]">
@@ -71,7 +109,10 @@ export default function BookDetailPage() {
             >
               동화 읽기
             </MainButton>
-            <MainButton type="button">동화에 얼굴 넣기</MainButton>
+            <MainButton type="button" onClick={() => handleCustomVideo()}>
+              동화에 얼굴 넣기
+            </MainButton>
+            {/* onCLick 에다가 api 호출 넣고 거기다가 조건 넣고서 푸시 넣기 */}
           </div>
         </div>
       </div>

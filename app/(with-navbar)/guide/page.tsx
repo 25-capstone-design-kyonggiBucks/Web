@@ -164,7 +164,7 @@ export default function GuidePage() {
               )}
               <MainButton
                 onClick={() => startCapture(type)}
-                className="mt-4 text-[18px] w-[495px] h-[80px] rounded-xl"
+                className="mt-4 text-[18px] w-[494px] h-[80px] rounded-xl"
               >
                 {photos[type] ? "재촬영" : "촬영"}
               </MainButton>

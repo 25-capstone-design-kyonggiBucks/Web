@@ -59,16 +59,6 @@ export default function BookReadPage() {
             영상을 불러오는 중...
           </div>
         )}
-        {/* <div className="absolute inset-0 bg-black bg-opacity-30 flex justify-center items-center">
-          <button>
-            <Image
-              src="/icons/book-read-playIcon.svg"
-              alt="재생 버튼"
-              width={143}
-              height={143}
-            />
-          </button>
-        </div> */}
       </div>
     </div>
   );
