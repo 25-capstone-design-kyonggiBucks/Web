@@ -19,7 +19,9 @@ export const getBasicVedio = async (bookId: number) => {
 
 export const postCustomVedio = async (bookId: number) => {
   try {
-    const response = await api.post(`/api/video/${bookId}/custom`);
+    const response = await api.post(`/api/video/${bookId}/custom`, {
+      voice: "DEFAULT",
+    });
     return response.data;
   } catch (error: unknown) {
     if (error instanceof Error) {
