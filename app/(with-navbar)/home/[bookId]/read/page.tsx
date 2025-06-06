@@ -1,10 +1,10 @@
 "use client";
 
+import { getBasicVedio, getCustomVedio } from "@/api/video";
 import { useEffect, useState } from "react";
+import { useParams, useSearchParams } from "next/navigation";
 
-import { getBasicVedio } from "@/api/video";
 import { getBookById } from "@/api/bookApi";
-import { useParams } from "next/navigation";
 
 interface Book {
   bookId: number;
@@ -16,7 +16,9 @@ interface Book {
 
 export default function BookReadPage() {
   const params = useParams();
+  const searchParams = useSearchParams();
   const bookId = Number(params.bookId);
+  const isCustom = searchParams.get("custom") === "true";
   const [book, setBook] = useState<Book | null>(null);
   const [videoUrl, setVideoUrl] = useState<string | null>(null);
 
@@ -26,7 +28,9 @@ export default function BookReadPage() {
         const data = await getBookById(bookId);
         setBook(data);
 
-        const videoData = await getBasicVedio(bookId);
+        const videoData = isCustom
+          ? await getCustomVedio(bookId)
+          : await getBasicVedio(bookId);
         setVideoUrl(videoData);
       } catch (error) {
         console.error(error);
