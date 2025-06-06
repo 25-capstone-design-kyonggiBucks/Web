@@ -18,9 +18,12 @@ export default function BookReadPage() {
   const params = useParams();
   const searchParams = useSearchParams();
   const bookId = Number(params.bookId);
-  const isCustom = searchParams.get("custom") === "true";
   const [book, setBook] = useState<Book | null>(null);
   const [videoUrl, setVideoUrl] = useState<string | null>(null);
+
+  const isCustom = searchParams.get("custom") === "true";
+  console.log("isCustom 참거짓 유무:", isCustom); //이거 false면 1번 주석 제거. true면 2번 주석 제거
+  console.log("searchParams.get('custom'):", searchParams.get("custom"));
 
   useEffect(() => {
     const fetchBook = async () => {
@@ -28,9 +31,18 @@ export default function BookReadPage() {
         const data = await getBookById(bookId);
         setBook(data);
 
+        //1번 주석 사용시 , 2번을 주석 처리 해주세여
+        // const customParam = searchParams.get("custom");
+        // const isCustomVideo = customParam === "true";
+        // const videoData = isCustomVideo
+        //   ? await getCustomVedio(bookId)
+        //   : await getBasicVedio(bookId);
+
+        //2번
         const videoData = isCustom
           ? await getCustomVedio(bookId)
           : await getBasicVedio(bookId);
+
         setVideoUrl(videoData);
       } catch (error) {
         console.error(error);
@@ -40,7 +52,7 @@ export default function BookReadPage() {
     if (!isNaN(bookId)) {
       fetchBook();
     }
-  }, [bookId]);
+  }, [bookId, searchParams]);
 
   if (!book) {
     return <div className="p-8">존재하지 않는 동화입니다.</div>;
