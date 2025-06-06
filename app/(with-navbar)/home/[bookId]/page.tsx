@@ -46,7 +46,7 @@ export default function BookDetailPage() {
       }
 
       if (videoUrl) {
-        router.push(`/home/${bookId}/read/custom`);
+        router.push(`/home/${bookId}/readCustom`);
       } else {
         alert("영상 생성에 실패했습니다. 다시 시도해주세요.");
         setIsCreating(false);
