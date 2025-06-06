@@ -1,6 +1,6 @@
 "use client";
 
-import { getCustomVedio, postCustomVedio } from "@/api/video";
+import { getCustomVideo, postCustomVideo } from "@/api/video";
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 
@@ -28,7 +28,7 @@ export default function BookDetailPage() {
   const handleCustomVideo = async () => {
     try {
       setIsCreating(true);
-      await postCustomVedio(bookId);
+      await postCustomVideo(bookId);
 
       // 영상 생성 완료될 때까지 폴링 또는 일정 시간 대기 후 시도
       let retryCount = 0;
@@ -36,7 +36,7 @@ export default function BookDetailPage() {
 
       while (retryCount < 10) {
         try {
-          videoUrl = await getCustomVedio(bookId);
+          videoUrl = await getCustomVideo(bookId);
           if (videoUrl) break; // 영상 생성 완료됨
         } catch {
           // 영상이 아직 준비되지 않았을 경우
@@ -46,7 +46,7 @@ export default function BookDetailPage() {
       }
 
       if (videoUrl) {
-        router.push(`/home/${bookId}/read?custom=true`);
+        router.push(`/home/${bookId}/read/custom`);
       } else {
         alert("영상 생성에 실패했습니다. 다시 시도해주세요.");
         setIsCreating(false);

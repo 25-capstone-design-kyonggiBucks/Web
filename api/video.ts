@@ -1,6 +1,6 @@
 import api from "./axios";
 
-export const getBasicVedio = async (bookId: number) => {
+export const getBasicVideo = async (bookId: number) => {
   const accessToken = sessionStorage.getItem("accessToken");
 
   const res = await api.get(`/api/video/${bookId}/stream/default`, {
@@ -17,7 +17,7 @@ export const getBasicVedio = async (bookId: number) => {
   return videoUrl;
 };
 
-export const postCustomVedio = async (bookId: number) => {
+export const postCustomVideo = async (bookId: number) => {
   try {
     const response = await api.post(`/api/video/${bookId}/custom`, {
       voice: "DEFAULT",
@@ -34,7 +34,7 @@ export const postCustomVedio = async (bookId: number) => {
   }
 };
 
-export const getCustomVedio = async (bookId: number) => {
+export const getCustomVideo = async (bookId: number) => {
   const accessToken = sessionStorage.getItem("accessToken");
 
   const res = await api.get(
