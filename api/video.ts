@@ -38,7 +38,7 @@ export const getCustomVedio = async (bookId: number) => {
   const accessToken = sessionStorage.getItem("accessToken");
 
   const res = await api.get(
-    `/api/video/${bookId}/stream/custom?voice=default`,
+    `/api/video/${bookId}/stream/custom?voice=DEFAULT`,
     {
       headers: {
         Authorization: `Bearer ${accessToken}`,
