@@ -12,7 +12,6 @@ import {
 import Image from "next/image";
 import MainButton from "@/components/MainButton";
 import dynamic from "next/dynamic";
-import guideLinePath from "/public/images/guide-line.svg";
 
 const Webcam = dynamic(() => import("react-webcam"), { ssr: false });
 
@@ -28,6 +27,13 @@ const expressions: { type: Expression; label: string }[] = [
   { type: "SURPRISED", label: "놀란 얼굴" },
   { type: "ANGRY", label: "화난 얼굴" },
 ];
+
+const guideLineMap: Record<Expression, string> = {
+  HAPPY: "/images/guide-happy.png",
+  SAD: "/images/guide-sad.png",
+  SURPRISED: "/images/guide-surprised.png",
+  ANGRY: "/images/guide-angry.png",
+};
 
 export default function GuidePage() {
   const [photos, setPhotos] = useState<Record<Expression, string | null>>({
@@ -119,11 +125,12 @@ export default function GuidePage() {
           />
           <div className="absolute">
             <Image
-              src={guideLinePath}
+              src={guideLineMap[currentExpr]}
               alt="가이드라인"
               width={360}
               height={200}
               className="pointer-events-none"
+              style={{ opacity: 0.6 }}
             />
           </div>
           <div className="mt-4 flex space-x-4 w-[840px]">
