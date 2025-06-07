@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="121" height="153" viewBox="0 0 121 153" fill="none">
+  <rect x="35" y="54" width="8" height="14" rx="4" fill="#6C3401"/>
+  <rect x="78" y="54" width="8" height="14" rx="4" fill="#6C3401"/>
+  <path d="M33 47.546C35 46.3794 40.1 44.746 44.5 47.546" stroke="#6C3401" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M76 47.546C78 46.3794 83.1 44.746 87.5 47.546" stroke="#6C3401" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M71 94C67.5217 96.2639 58.6522 99.4333 51 94" stroke="#6C3401" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M2 70.1334C2 60.4267 10.03 56.7556 13.5449 57.0667C10.5 40 12.5868 2 58.6033 2C104.62 2 110.372 38.7111 107.496 57.0667C109.413 58.9334 119 53.3334 119 70.1334C119 83.5734 110.052 86.3111 105.579 86C100.785 99.0667 91.1983 128 58.6033 128C32.5273 128 19.1544 100 15 86C6.37138 86 2 77.5 2 70.1334Z" stroke="#6C3401" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M34 119.5C35.5 129.833 34.9 150.5 20.5 150.5" stroke="#6C3401" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M86.5605 119.5C85.0605 129.833 85.6605 150.5 100.061 150.5" stroke="#6C3401" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

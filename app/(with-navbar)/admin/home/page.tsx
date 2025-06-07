@@ -1,25 +1,29 @@
 "use client";
 
+import { deleteBook, getBooksByType } from "@/api/bookApi";
 import { useEffect, useRef, useState } from "react";
 
 import Image from "next/image";
 import MainButton from "@/components/MainButton";
-import booksData from "../../../../mocks/bookList.json";
 import { useRouter } from "next/navigation";
 
-const MOCK_BOOKS = booksData.data;
+interface Book {
+  bookId: number;
+  title: string;
+  summary: string;
+  imageURL: string;
+  bookType: "FOLKTALE" | "CLASSIC";
+}
 
 function MoreOptions({
   onEdit,
   onDeleteMode,
-  onAdd,
 }: {
   onEdit: () => void;
   onDeleteMode: () => void;
-  onAdd: () => void;
 }) {
   return (
-    <div className="gap-y-[30px] flex flex-col w-[180px] h-[288px] shrink-0 rounded-[30px] bg-[rgba(255,254,246,0.95)] shadow-[2px_7px_10px_3px_rgba(0,0,0,0.45),_0px_4px_10px_0px_rgba(108,52,1,0.15)_inset] text-text-brown font-nanum text-[40px] not-italic font-normal leading-[85%] tracking-[-1.2px]">
+    <div className="gap-y-[30px] flex flex-col w-[180px] h-[192px] shrink-0 rounded-[30px] bg-[rgba(255,254,246,0.95)] shadow-[2px_7px_10px_3px_rgba(0,0,0,0.45),_0px_4px_10px_0px_rgba(108,52,1,0.15)_inset] text-text-brown font-nanum text-[40px] not-italic font-normal leading-[85%] tracking-[-1.2px]">
       <button className="px-[54px] mt-[30px]" onClick={onEdit}>
         수정
       </button>
@@ -27,11 +31,6 @@ function MoreOptions({
       <hr className="border-t-[2px] border-text-brown opacity-[0.45] w-full" />
       <button className="px-[54px]" onClick={onDeleteMode}>
         삭제
-      </button>
-
-      <hr className="border-t-[2px] border-text-brown opacity-[0.45] w-full" />
-      <button className="px-[54px]" onClick={onAdd}>
-        추가
       </button>
     </div>
   );
@@ -64,7 +63,7 @@ function DeleteModal({
         </h2>
         <div className="relative w-full h-[262px]">
           <Image
-            src={bookImage}
+            src={`${process.env.NEXT_PUBLIC_API_BASE_URL}${bookImage}`}
             alt={bookTitle}
             fill
             className="object-contain"
@@ -94,10 +93,10 @@ export default function AdminHomePage() {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [deleteId, setDeleteId] = useState<number | null>(null);
 
-  const [books, setBooks] = useState(MOCK_BOOKS);
+  const [books, setBooks] = useState<Book[]>([]);
 
   const itemsPerPage = 6;
-  const filteredBooks = books.filter((book) => book.bookType === currentType);
+  const filteredBooks = books;
   const totalPages = Math.ceil(filteredBooks.length / itemsPerPage);
   const startIndex = (page - 1) * itemsPerPage;
   const displayedBooks = filteredBooks.slice(
@@ -121,6 +120,18 @@ export default function AdminHomePage() {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
+  useEffect(() => {
+    const fetchBooks = async () => {
+      try {
+        const res = await getBooksByType(currentType);
+        setBooks(res);
+      } catch (error) {
+        console.error("도서 불러오기 실패:", error);
+      }
+    };
+    fetchBooks();
+  }, [currentType]);
 
   const handleTabChange = (type: "FOLKTALE" | "CLASSIC") => {
     setCurrentType(type);
@@ -152,11 +163,17 @@ export default function AdminHomePage() {
     setIsDeleteModalOpen(true);
   };
 
-  const handleConfirmDelete = () => {
+  const handleConfirmDelete = async () => {
     if (deleteId == null) return;
-    setBooks((prev) => prev.filter((b) => b.bookId !== deleteId));
-    setDeleteId(null);
-    setIsDeleteModalOpen(false);
+    try {
+      await deleteBook(deleteId);
+      setBooks((prev) => prev.filter((b) => b.bookId !== deleteId));
+      setDeleteId(null);
+      setIsDeleteModalOpen(false);
+    } catch (error) {
+      alert("도서 삭제에 실패했습니다.");
+      console.error("삭제 실패:", error);
+    }
   };
 
   return (
@@ -214,7 +231,11 @@ export default function AdminHomePage() {
             )}
 
             <div className="relative w-full aspect-[526/256] mb-[21px] cursor-pointer">
-              <Image src={book.imageURL} alt={book.title} fill />
+              <Image
+                src={`${process.env.NEXT_PUBLIC_API_BASE_URL}${book.imageURL}`}
+                alt={book.title}
+                fill
+              />
             </div>
             {/* 도서 정보 + 더보기 아이콘 */}
             <div className="flex flex-row justify-between px-[32px] pb-[33px]">
@@ -258,10 +279,6 @@ export default function AdminHomePage() {
                         handleDeleteMode();
                         setOpenId(null);
                       }}
-                      onAdd={() => {
-                        setOpenId(null);
-                        router.push("/admin/add");
-                      }}
                     />
                   </div>
                 )}
@@ -269,6 +286,21 @@ export default function AdminHomePage() {
             </div>
           </div>
         ))}
+
+        {/* 추가 카드 */}
+        <div
+          onClick={() => router.push("/admin/add")}
+          className="rounded-[30px] bg-[#FFFEF6] 
+             shadow-[0px_4px_4px_rgba(108,52,1,0.25),_inset_0px_4px_10px_rgba(108,52,1,0.15)] 
+             flex items-center justify-center cursor-pointer opacity-[0.7]"
+        >
+          <Image
+            src="/icons/admin-add-plus.svg"
+            alt="도서 추가"
+            width={80}
+            height={80}
+          />
+        </div>
       </div>
 
       {/* 페이지네이션 */}

@@ -1,10 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams, useSearchParams } from "next/navigation";
 
-import { getBasicVideo } from "@/api/video";
 import { getBookById } from "@/api/bookApi";
+import { getCustomVideo } from "@/api/video";
+import { useParams } from "next/navigation";
 
 interface Book {
   bookId: number;
@@ -14,9 +14,8 @@ interface Book {
   bookType: "FOLKTALE" | "CLASSIC";
 }
 
-export default function BookReadPage() {
+export default function CustomReadPage() {
   const params = useParams();
-  const searchParams = useSearchParams();
   const bookId = Number(params.bookId);
   const [book, setBook] = useState<Book | null>(null);
   const [videoUrl, setVideoUrl] = useState<string | null>(null);
@@ -26,7 +25,9 @@ export default function BookReadPage() {
       try {
         const data = await getBookById(bookId);
         setBook(data);
-        const videoData = await getBasicVideo(bookId);
+
+        const videoData = await getCustomVideo(bookId);
+
         setVideoUrl(videoData);
       } catch (error) {
         console.error(error);
@@ -36,7 +37,7 @@ export default function BookReadPage() {
     if (!isNaN(bookId)) {
       fetchBook();
     }
-  }, [bookId, searchParams]);
+  }, [bookId]);
 
   if (!book) {
     return <div className="p-8">존재하지 않는 동화입니다.</div>;

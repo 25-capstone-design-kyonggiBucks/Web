@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 
 export default function Navbar() {
   const router = useRouter();
-  const { userRole } = useAuth();
+  const { userRole, setUserRole } = useAuth();
   const [search, setSearch] = useState("");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
@@ -42,6 +42,16 @@ export default function Navbar() {
     }
   };
 
+  const handleLogout = () => {
+    sessionStorage.removeItem("accessToken");
+    sessionStorage.removeItem("refreshToken");
+
+    if (setUserRole) {
+      setUserRole(null);
+    }
+    router.push("/login");
+  };
+
   return (
     <nav className="w-full h-[140px] px-[40px] flex items-center justify-between bg-[rgba(255,241,189,1)] font-nanum text-text-brown">
       {/*왼쪽 */}
@@ -49,16 +59,7 @@ export default function Navbar() {
         className="flex items-center gap-3 cursor-pointer"
         onClick={handleLogoClick}
       >
-        <Image
-          src={"/icons/navSearchIcon.svg"}
-          alt="로고"
-          width={64}
-          height={64}
-          className="w-[64px] h-[64px]"
-        />
-        <span className="text-[40px] font-extrabold leading-normal tracking-[-0.075em]">
-          LOGO
-        </span>
+        <Image src="/images/logo.png" alt="close" width={201} height={74} />
       </div>
 
       {/* 검색바 */}
@@ -100,7 +101,7 @@ export default function Navbar() {
         {isDropdownOpen && (
           <div className="absolute right-[120px] mt-[200px] w-[180px] bg-white border border-gray-200 rounded-lg shadow-lg z-50">
             <Link
-              href="/mypage"
+              href="/guide"
               className="block px-4 py-3 text-text-brown hover:bg-yellow-100 font-semibold"
             >
               마이페이지
@@ -113,11 +114,7 @@ export default function Navbar() {
             </Link>
           </div>
         )}
-        <button
-          type="button"
-          className="cursor-pointer"
-          onClick={() => console.log("로그아웃")}
-        >
+        <button type="button" className="cursor-pointer" onClick={handleLogout}>
           <Image
             src={"/icons/navLogoutIcon.svg"}
             alt="로그아웃"
