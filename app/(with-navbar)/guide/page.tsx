@@ -4,9 +4,7 @@ import React, { useEffect, useRef, useState } from "react";
 import {
   getUserImages,
   updateImage,
-  updateImageToPython,
   uploadImage,
-  uploadImageToPython,
 } from "@/api/uploadImage";
 
 import Image from "next/image";
@@ -87,12 +85,10 @@ export default function GuidePage() {
     try {
       if (isUpdate) {
         const res1 = await updateImage(imageSrc, currentExpr);
-        const res2 = await updateImageToPython(imageSrc, currentExpr);
-        console.log("수정 완료", res1, res2);
+        console.log("수정 완료", res1);
       } else {
         const res1 = await uploadImage(imageSrc, currentExpr);
-        const res2 = await uploadImageToPython(imageSrc, currentExpr);
-        console.log("업로드 완료", res1, res2);
+        console.log("업로드 완료", res1);
       }
       uploadedRef.current.add(currentExpr);
     } catch (err) {
