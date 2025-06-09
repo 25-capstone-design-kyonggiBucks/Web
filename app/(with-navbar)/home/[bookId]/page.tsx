@@ -1,6 +1,5 @@
 "use client";
 
-import { getCustomVideo, postCustomVideo } from "@/api/video";
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 
@@ -8,6 +7,7 @@ import CreateLoading from "app/(with-navbar)/createLoading/page";
 import Image from "next/image";
 import MainButton from "@/components/MainButton";
 import { getBookById } from "@/api/bookApi";
+import { postCustomVideo } from "@/api/video";
 
 interface Book {
   bookId: number;
@@ -28,24 +28,9 @@ export default function BookDetailPage() {
   const handleCustomVideo = async () => {
     try {
       setIsCreating(true);
-      await postCustomVideo(bookId);
+      const response = await postCustomVideo(bookId);
 
-      // 영상 생성 완료될 때까지 폴링 또는 일정 시간 대기 후 시도
-      let retryCount = 0;
-      let videoUrl = null;
-
-      while (retryCount < 10) {
-        try {
-          videoUrl = await getCustomVideo(bookId);
-          if (videoUrl) break; // 영상 생성 완료됨
-        } catch {
-          // 영상이 아직 준비되지 않았을 경우
-          await new Promise((res) => setTimeout(res, 2000)); // 2초 대기
-          retryCount++;
-        }
-      }
-
-      if (videoUrl) {
+      if (response?.status === 200 || response?.status === 201) {
         router.push(`/home/${bookId}/readCustom`);
       } else {
         alert("영상 생성에 실패했습니다. 다시 시도해주세요.");
