@@ -27,17 +27,17 @@ export default function AboutPage() {
             {
               name: "최수인",
               part: "WEB",
-              github: " http://github.com/username",
+              github: " https://github.com/sooinice",
             },
             {
               name: "김우현",
               part: "AI",
-              github: " http://github.com/username",
+              github: " https://github.com/whkim712",
             },
             {
               name: "강서연",
               part: "AI",
-              github: " http://github.com/username",
+              github: " https://github.com/kangseo38",
             },
             {
               name: "이찬영",
@@ -47,12 +47,12 @@ export default function AboutPage() {
             {
               name: "안현준",
               part: "BE",
-              github: " http://github.com/username",
+              github: " https://github.com/202014953",
             },
             {
               name: "변주형",
               part: "BE",
-              github: " http://github.com/username",
+              github: " https://github.com/beginerer",
             },
           ].map((member, i) => (
             <div
@@ -93,7 +93,7 @@ export default function AboutPage() {
           도움을 주신 기업
         </h1>
         <hr className="border-t-[2px] border-text-brown opacity-[0.45] w-full mb-[32px]" />
-        <div className="text-[26px] font-normal leading-normal tracking-[-0.78px]">
+        <div className="text-[26px] font-normal leading-normal tracking-[-0.78px] bg-white rounded-[30px] bg-[rgba(255,254,246,0.85)] shadow-[inset_0px_4px_10px_rgba(108,52,1,0.15),_0px_4px_4px_rgba(108,52,1,0.25)] p-[23px] inline">
           모바일앱개발협동조합
         </div>
       </section>
