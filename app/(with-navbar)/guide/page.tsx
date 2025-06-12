@@ -3,6 +3,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { getUserImages, updateImage, uploadImage } from "@/api/uploadImage";
 
+import GuideLoading from "@/app/(with-navbar)/guideLoading/page";
 import Image from "next/image";
 import MainButton from "@/components/MainButton";
 import dynamic from "next/dynamic";
@@ -38,6 +39,7 @@ export default function GuidePage() {
   });
 
   const [currentExpr, setCurrentExpr] = useState<Expression | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const webcamRef = useRef<WebcamHandle | null>(null);
   const uploadedRef = useRef<Set<Expression>>(new Set());
@@ -77,17 +79,20 @@ export default function GuidePage() {
     const prevPhoto = photos[currentExpr];
 
     try {
+      setIsLoading(true);
       if (isUpdate) {
-        const res1 = await updateImage(imageSrc, currentExpr);
-        console.log("수정 완료", res1);
+        await updateImage(imageSrc, currentExpr);
       } else {
-        const res1 = await uploadImage(imageSrc, currentExpr);
-        console.log("업로드 완료", res1);
+        await uploadImage(imageSrc, currentExpr);
       }
-      setPhotos((prev) => ({ ...prev, [currentExpr]: imageSrc }));
       uploadedRef.current.add(currentExpr);
+      setPhotos((prev) => ({ ...prev, [currentExpr]: imageSrc }));
+
+      window.location.reload();
     } catch (err) {
       console.error("이미지 업로드 실패:", err);
+      alert("이미지 업로드 중 오류가 발생했습니다. 콘솔을 확인하세요.");
+
       if (isUpdate) {
         setPhotos((prev) => ({ ...prev, [currentExpr]: prevPhoto }));
       } else {
@@ -97,15 +102,23 @@ export default function GuidePage() {
           return updated;
         });
       }
-      alert("이미지 업로드 중 오류가 발생했습니다. 콘솔을 확인하세요.");
+    } finally {
+      setIsLoading(false);
+      setCurrentExpr(null);
     }
-
-    setCurrentExpr(null);
   };
 
   const cancelCapture = () => {
     setCurrentExpr(null);
   };
+
+  if (isLoading) {
+    return (
+      <div className="w-screen h-screen flex justify-center items-center bg-sub-color">
+        <GuideLoading />
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col min-h-screen items-center justify-start text-text-brown font-nanum bg-sub-color tracking-[-0.071em] py-[100px]">

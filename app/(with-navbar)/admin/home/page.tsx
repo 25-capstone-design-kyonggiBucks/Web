@@ -230,11 +230,12 @@ export default function AdminHomePage() {
               </button>
             )}
 
-            <div className="relative w-full aspect-[526/256] mb-[21px] cursor-pointer">
+            <div className="relative w-full aspect-[526/256] mb-[21px] rounded-t-[30px] cursor-pointer">
               <Image
                 src={`${process.env.NEXT_PUBLIC_API_BASE_URL}${book.imageURL}`}
                 alt={book.title}
                 fill
+                className="rounded-t-[30px]"
               />
             </div>
             {/* 도서 정보 + 더보기 아이콘 */}
