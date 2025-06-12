@@ -3,14 +3,12 @@
 import React, { useEffect, useRef, useState } from "react";
 import { getUserImages, updateImage, uploadImage } from "@/api/uploadImage";
 
+import GuideLoading from "@/app/(with-navbar)/guideLoading/page";
 import Image from "next/image";
 import MainButton from "@/components/MainButton";
 import dynamic from "next/dynamic";
 
 const Webcam = dynamic(() => import("react-webcam"), { ssr: false });
-const GuideLoading = dynamic(
-  () => import("@/app/(with-navbar)/guideLoading/page")
-);
 
 type Expression = "HAPPY" | "SAD" | "SURPRISED" | "ANGRY";
 
@@ -41,7 +39,7 @@ export default function GuidePage() {
   });
 
   const [currentExpr, setCurrentExpr] = useState<Expression | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const webcamRef = useRef<WebcamHandle | null>(null);
   const uploadedRef = useRef<Set<Expression>>(new Set());
@@ -80,15 +78,12 @@ export default function GuidePage() {
     const isUpdate = uploadedRef.current.has(currentExpr);
     const prevPhoto = photos[currentExpr];
 
-    setLoading(true);
-
     try {
+      setIsLoading(true);
       if (isUpdate) {
-        const res1 = await updateImage(imageSrc, currentExpr);
-        console.log("수정 완료", res1);
+        await updateImage(imageSrc, currentExpr);
       } else {
-        const res1 = await uploadImage(imageSrc, currentExpr);
-        console.log("업로드 완료", res1);
+        await uploadImage(imageSrc, currentExpr);
       }
       uploadedRef.current.add(currentExpr);
       setPhotos((prev) => ({ ...prev, [currentExpr]: imageSrc }));
@@ -108,7 +103,7 @@ export default function GuidePage() {
         });
       }
     } finally {
-      setLoading(false);
+      setIsLoading(false);
       setCurrentExpr(null);
     }
   };
@@ -117,10 +112,16 @@ export default function GuidePage() {
     setCurrentExpr(null);
   };
 
+  if (isLoading) {
+    return (
+      <div className="w-screen h-screen flex justify-center items-center bg-sub-color">
+        <GuideLoading />
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col min-h-screen items-center justify-start text-text-brown font-nanum bg-sub-color tracking-[-0.071em] py-[100px]">
-      {loading && <GuideLoading />}
-
       {currentExpr ? (
         <div className="relative flex-col w-[840px] h-[680px] flex justify-center items-center">
           {currentExpr && (
