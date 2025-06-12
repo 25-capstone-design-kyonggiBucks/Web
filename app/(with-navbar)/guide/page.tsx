@@ -8,6 +8,9 @@ import MainButton from "@/components/MainButton";
 import dynamic from "next/dynamic";
 
 const Webcam = dynamic(() => import("react-webcam"), { ssr: false });
+const GuideLoading = dynamic(
+  () => import("@/app/(with-navbar)/guideLoading/page")
+);
 
 type Expression = "HAPPY" | "SAD" | "SURPRISED" | "ANGRY";
 
@@ -38,6 +41,7 @@ export default function GuidePage() {
   });
 
   const [currentExpr, setCurrentExpr] = useState<Expression | null>(null);
+  const [loading, setLoading] = useState(false);
 
   const webcamRef = useRef<WebcamHandle | null>(null);
   const uploadedRef = useRef<Set<Expression>>(new Set());
@@ -76,6 +80,8 @@ export default function GuidePage() {
     const isUpdate = uploadedRef.current.has(currentExpr);
     const prevPhoto = photos[currentExpr];
 
+    setLoading(true);
+
     try {
       if (isUpdate) {
         const res1 = await updateImage(imageSrc, currentExpr);
@@ -84,10 +90,14 @@ export default function GuidePage() {
         const res1 = await uploadImage(imageSrc, currentExpr);
         console.log("업로드 완료", res1);
       }
-      setPhotos((prev) => ({ ...prev, [currentExpr]: imageSrc }));
       uploadedRef.current.add(currentExpr);
+      setPhotos((prev) => ({ ...prev, [currentExpr]: imageSrc }));
+
+      window.location.reload();
     } catch (err) {
       console.error("이미지 업로드 실패:", err);
+      alert("이미지 업로드 중 오류가 발생했습니다. 콘솔을 확인하세요.");
+
       if (isUpdate) {
         setPhotos((prev) => ({ ...prev, [currentExpr]: prevPhoto }));
       } else {
@@ -97,10 +107,10 @@ export default function GuidePage() {
           return updated;
         });
       }
-      alert("이미지 업로드 중 오류가 발생했습니다. 콘솔을 확인하세요.");
+    } finally {
+      setLoading(false);
+      setCurrentExpr(null);
     }
-
-    setCurrentExpr(null);
   };
 
   const cancelCapture = () => {
@@ -109,6 +119,8 @@ export default function GuidePage() {
 
   return (
     <div className="flex flex-col min-h-screen items-center justify-start text-text-brown font-nanum bg-sub-color tracking-[-0.071em] py-[100px]">
+      {loading && <GuideLoading />}
+
       {currentExpr ? (
         <div className="relative flex-col w-[840px] h-[680px] flex justify-center items-center">
           {currentExpr && (
