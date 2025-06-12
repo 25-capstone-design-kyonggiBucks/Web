@@ -30,17 +30,15 @@ export default function BookDetailPage() {
       setIsCreating(true);
       await postCustomVideo(bookId);
 
-      // 영상 생성 완료될 때까지 폴링 또는 일정 시간 대기 후 시도
       let retryCount = 0;
       let videoUrl = null;
 
       while (retryCount < 10) {
         try {
           videoUrl = await getCustomVideo(bookId);
-          if (videoUrl) break; // 영상 생성 완료됨
+          if (videoUrl) break;
         } catch {
-          // 영상이 아직 준비되지 않았을 경우
-          await new Promise((res) => setTimeout(res, 2000)); // 2초 대기
+          await new Promise((res) => setTimeout(res, 10000));
           retryCount++;
         }
       }
@@ -102,7 +100,7 @@ export default function BookDetailPage() {
           </h1>
           <p className="text-[34.112px] font-normal">{book.summary}</p>
 
-          <div className="flex flex-col gap-[30px] mt-[90px] items-center">
+          <div className="flex flex-col gap-[30px] mt-[90px] items-end">
             <MainButton
               type="button"
               onClick={() => router.push(`/home/${bookId}/read`)}

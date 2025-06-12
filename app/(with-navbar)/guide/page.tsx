@@ -1,13 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import {
-  getUserImages,
-  updateImage,
-  updateImageToPython,
-  uploadImage,
-  uploadImageToPython,
-} from "@/api/uploadImage";
+import { getUserImages, updateImage, uploadImage } from "@/api/uploadImage";
 
 import Image from "next/image";
 import MainButton from "@/components/MainButton";
@@ -80,23 +74,29 @@ export default function GuidePage() {
     if (!imageSrc) return;
 
     const isUpdate = uploadedRef.current.has(currentExpr);
-
-    setPhotos((prev) => ({ ...prev, [currentExpr]: imageSrc }));
-    console.log("Captured", { expression: currentExpr, file: imageSrc });
+    const prevPhoto = photos[currentExpr];
 
     try {
       if (isUpdate) {
         const res1 = await updateImage(imageSrc, currentExpr);
-        const res2 = await updateImageToPython(imageSrc, currentExpr);
-        console.log("수정 완료", res1, res2);
+        console.log("수정 완료", res1);
       } else {
         const res1 = await uploadImage(imageSrc, currentExpr);
-        const res2 = await uploadImageToPython(imageSrc, currentExpr);
-        console.log("업로드 완료", res1, res2);
+        console.log("업로드 완료", res1);
       }
+      setPhotos((prev) => ({ ...prev, [currentExpr]: imageSrc }));
       uploadedRef.current.add(currentExpr);
     } catch (err) {
       console.error("이미지 업로드 실패:", err);
+      if (isUpdate) {
+        setPhotos((prev) => ({ ...prev, [currentExpr]: prevPhoto }));
+      } else {
+        setPhotos((prev) => {
+          const updated = { ...prev };
+          delete updated[currentExpr];
+          return updated;
+        });
+      }
       alert("이미지 업로드 중 오류가 발생했습니다. 콘솔을 확인하세요.");
     }
 
@@ -154,12 +154,12 @@ export default function GuidePage() {
             <div key={type} className="flex flex-col items-center ">
               <p className="mb-2 text-[32px] font-bold">{label}</p>
               {photos[type] ? (
-                <div className="relative w-[500px] h-[300px]">
+                <div className="relative w-[500px] bg-sub-color h-[300px]">
                   <Image
                     src={photos[type]!}
                     alt={label}
                     fill
-                    className="object-cover rounded-2xl shadow"
+                    className="object-contain rounded-2xl shadow"
                   />
                 </div>
               ) : (
@@ -171,7 +171,7 @@ export default function GuidePage() {
               )}
               <MainButton
                 onClick={() => startCapture(type)}
-                className="mt-4 text-[18px] w-[494px] h-[80px] rounded-xl"
+                className="mt-4 text-[18px] w-[490px] h-[80px] rounded-xl"
               >
                 {photos[type] ? "재촬영" : "촬영"}
               </MainButton>
