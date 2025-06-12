@@ -100,7 +100,7 @@ export default function BookDetailPage() {
           </h1>
           <p className="text-[34.112px] font-normal">{book.summary}</p>
 
-          <div className="flex flex-col gap-[30px] mt-[90px] items-center">
+          <div className="flex flex-col gap-[30px] mt-[90px] items-end">
             <MainButton
               type="button"
               onClick={() => router.push(`/home/${bookId}/read`)}
