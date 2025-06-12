@@ -28,11 +28,12 @@ export default function CustomReadPage() {
     const fetchBook = async () => {
       try {
         const data = await getBookById(bookId);
-        setBook(data);
+        const bookData = data.data;
+        setBook(bookData);
 
-        if (data.title === "금도끼은도끼") {
+        if (bookData.title === "금도끼은도끼") {
           setAudioSrc("/audio/Axe.mp3");
-        } else if (data.title === "아낌없이주는나무") {
+        } else if (bookData.title === "아낌없이주는나무") {
           setAudioSrc("/audio/Axe.mp3");
         } else {
           setAudioSrc(null);
