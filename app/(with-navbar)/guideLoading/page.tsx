@@ -3,7 +3,7 @@ import { PulseLoader } from "react-spinners";
 
 export default function FaceRecognitionLoader() {
   return (
-    <div className="flex min-h-screen justify-center bg-sub-color">
+    <div className="flex min-h-screen justify-center">
       <div className="bg-[rgba(255,254,246,0.85)] w-[898px] h-[582px] rounded-[30px] mt-[143px] text-text-brown font-nanum leading-normal">
         <div className="w-full flex flex-col text-center mt-[67px]">
           {/*로딩 스피닝 - 작동안되는데 나중에 손보기*/}
